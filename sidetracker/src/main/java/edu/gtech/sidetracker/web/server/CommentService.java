@@ -4,10 +4,7 @@ import edu.gtech.sidetracker.web.dao.Dao;
 import edu.gtech.sidetracker.web.model.Comment;
 
 import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 
 import java.util.List;
 
@@ -27,6 +24,13 @@ public class CommentService {
 	@Produces( APPLICATION_JSON )
 	public List<? extends Comment> getAll() {
 		return commentDao.getAll();
+	}
+
+	@POST
+	@Produces(APPLICATION_JSON)
+	public Comment create(final Comment comment) {
+		commentDao.add(comment);
+		return comment;
 	}
 
 	@GET

@@ -17,7 +17,7 @@ public class CommentDao implements Dao<Comment> {
     public CommentDao() {
         this.comments = new ArrayList<>();
         final Comment comment = new Comment();
-        comment.setId(1);
+        comment.setId(0);
         comment.setUserName("Karl");
         comment.setComment("Example Service");
         this.comments.add(comment);
@@ -32,5 +32,11 @@ public class CommentDao implements Dao<Comment> {
     public Comment getById(String id) {
         final int idInt = Integer.valueOf(id);
         return comments.get(idInt);
+    }
+
+    @Override
+    public void add(Comment comment) {
+        comment.setId(this.comments.size());
+        this.comments.add(comment);
     }
 }

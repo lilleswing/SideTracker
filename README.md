@@ -2,7 +2,7 @@
 Georgia Tech Health Informatics Final Project
 
 ## High Level Architecture
-![Architecture](alt tex://github.com/lilleswing/SideTracker/blob/master/docs/sidetracker.pngtle Text 1")
+![Architecture](http://raw.githubusercontent.com/lilleswing/SideTracker/master/docs/sidetracker.png)
 
 
 ## Back End

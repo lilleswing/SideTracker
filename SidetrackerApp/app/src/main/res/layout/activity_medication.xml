@@ -41,7 +41,7 @@
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="130dp"
-        android:id="@+id/listView2"
+        android:id="@+id/AlarmListView"
         android:layout_below="@+id/textView7"
         android:layout_alignParentStart="true"
         android:textColor="#ffff0010"/>
@@ -64,7 +64,7 @@
         android:text="Set New Alarm"
         android:id="@+id/button5"
         android:layout_marginTop="41dp"
-        android:layout_below="@+id/listView2"
+        android:layout_below="@+id/AlarmListView"
         android:layout_centerHorizontal="true"
         android:textColor="#ffff0010"/>
 

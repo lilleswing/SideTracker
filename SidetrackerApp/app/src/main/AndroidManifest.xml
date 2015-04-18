@@ -22,7 +22,7 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:label="@string/title_activity_main" >
+            android:label="Medications" >
         </activity>
         <activity
             android:name=".Medication"
@@ -39,6 +39,10 @@
         <activity
             android:name=".AddSideEffect"
             android:label="@string/title_activity_add_side_effect" >
+        </activity>
+        <activity
+            android:name=".ViewSideEffect"
+            android:label="@string/title_activity_view_side_effect" >
         </activity>
     </application>
 

@@ -4,24 +4,21 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.content.Intent;
-import android.view.View;
-import android.content.Context;
 
 
-public class Login extends ActionBarActivity {
+public class ViewSideEffect extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_view_side_effect);
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_login, menu);
+        getMenuInflater().inflate(R.menu.menu_view_side_effect, menu);
         return true;
     }
 
@@ -38,22 +35,5 @@ public class Login extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    public void loginClicked(View v){
-        //Do login stuff here
-        //Need to make sure there is no illegal characters
-        //Need to encrypt password and look up in db
-        //If error reset text and and throw an error message
-        Context context = getApplicationContext();
-        Intent intent = new Intent(context, MainActivity.class);
-        startActivity(intent);
-    }
-
-    public void signUpPressed(View v){
-        Context context = getApplicationContext();
-        Intent intent = new Intent(context, SignUp.class);
-        startActivity(intent);
-
     }
 }

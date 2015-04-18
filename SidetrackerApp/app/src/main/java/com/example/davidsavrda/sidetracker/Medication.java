@@ -4,14 +4,34 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
+import java.util.ArrayList;
 
 
 public class Medication extends ActionBarActivity {
 
+    public MedicationInfo med;
+    public ListView alarms;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_medication);
+        //Place holder stuff
+        med = new MedicationInfo();
+        med.name = "Test";
+        med.detail = "Details";
+        AlarmInfo alarm = new AlarmInfo();
+        alarm.time = "9:00";
+        alarm.day = "Monday";
+        med.alarms.add(alarm);
+        //Stuff we will probably keep
+        alarms = (ListView) findViewById(R.id.AlarmListView);
+        ArrayList<String> times = new ArrayList<String>();
+        times.add(alarm.time);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, times);
+        alarms.setAdapter(arrayAdapter);
     }
 
 

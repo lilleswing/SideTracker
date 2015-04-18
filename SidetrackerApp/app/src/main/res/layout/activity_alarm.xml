@@ -29,14 +29,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Daily"
-            android:textColor="#ffff0010"
             android:id="@+id/radioButton"
             android:checked="false" />
 
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#ffff0010"
             android:text="Specific Days"
             android:id="@+id/radioButton2"
             android:checked="false" />
@@ -44,7 +42,6 @@
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#ffff0010"
             android:text="Monday"
             android:id="@+id/checkBox"
             android:checked="false"
@@ -54,7 +51,6 @@
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#ffff0010"
             android:text="Tuesday"
             android:id="@+id/checkBox2"
             android:layout_gravity="center_horizontal"
@@ -64,7 +60,6 @@
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#ffff0010"
             android:text="Wednesday"
             android:id="@+id/checkBox3"
             android:layout_gravity="center_horizontal"
@@ -74,7 +69,6 @@
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#ffff0010"
             android:text="Thursday"
             android:id="@+id/checkBox4"
             android:layout_gravity="center_horizontal"
@@ -84,7 +78,6 @@
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#ffff0010"
             android:text="Friday"
             android:id="@+id/checkBox5"
             android:layout_gravity="center_horizontal"
@@ -94,7 +87,6 @@
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#ffff0010"
             android:text="Saturday"
             android:id="@+id/checkBox6"
             android:layout_gravity="center_horizontal"
@@ -104,7 +96,6 @@
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#ffff0010"
             android:text="Sunday"
             android:id="@+id/checkBox7"
             android:layout_gravity="center_horizontal"

@@ -4,6 +4,9 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.content.Intent;
+import android.view.View;
+import android.content.Context;
 
 
 public class Login extends ActionBarActivity {
@@ -35,5 +38,19 @@ public class Login extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void loginPressed(){
+        //Do login stuff here
+        //Need to make sure there is no illegal characters
+        //Need to encrypt password and look up in db
+        //If error reset text and and throw an error message
+    }
+
+    public void signUpPressed(View v){
+        Context context = getApplicationContext();
+        Intent intent = new Intent(context, SignUp.class);
+        startActivity(intent);
+
     }
 }

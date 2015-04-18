@@ -25,7 +25,8 @@
         android:id="@+id/button"
         android:textColor="#ffff0002"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:onClick="loginClicked" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -33,8 +34,8 @@
         android:inputType="textPersonName"
         android:text="Username"
         android:ems="10"
-        android:id="@+id/editText2"
-        android:layout_above="@+id/editText"
+        android:id="@+id/username"
+        android:layout_above="@+id/password"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="36dp" />
 
@@ -44,10 +45,11 @@
         android:inputType="textPersonName"
         android:text="Password"
         android:ems="10"
-        android:id="@+id/editText"
+        android:id="@+id/password"
         android:layout_above="@+id/button"
-        android:layout_alignStart="@+id/editText2"
-        android:layout_marginBottom="42dp" />
+        android:layout_alignStart="@+id/username"
+        android:layout_marginBottom="42dp"
+        android:linksClickable="false" />
 
     <Button
         android:layout_width="wrap_content"
@@ -56,7 +58,8 @@
         android:id="@+id/button2"
         android:textColor="#ffff0002"
         android:layout_alignTop="@+id/button"
-        android:layout_alignEnd="@+id/textView" />
+        android:layout_alignEnd="@+id/textView"
+        android:onClick="signUpPressed" />
 
     <ImageView
         android:layout_width="wrap_content"

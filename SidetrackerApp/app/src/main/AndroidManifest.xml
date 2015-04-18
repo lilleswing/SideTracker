@@ -25,8 +25,8 @@
             android:label="@string/title_activity_main" >
         </activity>
         <activity
-            android:name=".medication"
-            android:label="@string/title_activity_medication" >
+            android:name=".Medication"
+            android:label="Medication" >
         </activity>
         <activity
             android:name=".Alarm"

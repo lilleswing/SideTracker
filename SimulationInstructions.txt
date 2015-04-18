@@ -1,0 +1,8 @@
+Simulator Instructions:
+	1). Launch the AVD manager from the IDE
+	2). Press the create new virtual device button
+	3). Ensure the category is set to Phone
+	4). Select the Nexus 4 option
+	5). Select Kitkat API level 19, using the x86 ABI, and the Target as Android 4.4.2
+	6). When you start the simulation to simulate the app, ensure that this device is selected 
+	

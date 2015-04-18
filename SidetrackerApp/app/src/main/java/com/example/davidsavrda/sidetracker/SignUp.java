@@ -1,9 +1,12 @@
 package com.example.davidsavrda.sidetracker;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 
 public class SignUp extends ActionBarActivity {
@@ -35,5 +38,20 @@ public class SignUp extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+
+    public void signUpPressed(View v){
+        //Still need to do the database and verfication tasks to ensure sign up is correct
+        Context context = getApplicationContext();
+        Intent intent = new Intent(context, MainActivity.class);
+        startActivity(intent);
+    }
+
+    public void cancelPressed(View v){
+        Context context = getApplicationContext();
+        Intent intent = new Intent(context, Login.class);
+        startActivity(intent);
+
     }
 }

@@ -24,7 +24,7 @@
         android:inputType="textPersonName"
         android:text="Name"
         android:ems="10"
-        android:id="@+id/editText3"
+        android:id="@+id/Name"
         android:layout_below="@+id/textView2"
         android:layout_centerHorizontal="true" />
 
@@ -34,10 +34,10 @@
         android:inputType="textPersonName"
         android:text="Username"
         android:ems="10"
-        android:id="@+id/editText4"
+        android:id="@+id/Username"
         android:layout_marginTop="29dp"
-        android:layout_below="@+id/editText3"
-        android:layout_alignStart="@+id/editText3" />
+        android:layout_below="@+id/Name"
+        android:layout_alignStart="@+id/Name" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -45,59 +45,50 @@
         android:inputType="textPersonName"
         android:text="Password"
         android:ems="10"
-        android:id="@+id/editText5"
+        android:id="@+id/Password"
         android:layout_marginTop="31dp"
-        android:layout_below="@+id/editText4"
-        android:layout_alignStart="@+id/editText4" />
+        android:layout_below="@+id/Username"
+        android:layout_alignStart="@+id/Username" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
         android:ems="10"
-        android:id="@+id/editText6"
+        android:id="@+id/confirmPassword"
         android:layout_marginTop="29dp"
-        android:layout_below="@+id/editText5"
-        android:layout_alignStart="@+id/editText5"
+        android:layout_below="@+id/Password"
+        android:layout_alignStart="@+id/Password"
         android:text="Confirm Password" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
-        android:text="Doctor Source"
+        android:text="Patient Id"
         android:ems="10"
-        android:id="@+id/editText7"
+        android:id="@+id/Id"
         android:layout_marginTop="29dp"
-        android:layout_below="@+id/editText6"
-        android:layout_alignStart="@+id/editText6" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:text="Name"
-        android:ems="10"
-        android:id="@+id/editText8"
-        android:layout_marginTop="29dp"
-        android:layout_below="@+id/editText7"
-        android:layout_alignStart="@+id/editText7" />
+        android:layout_below="@+id/confirmPassword"
+        android:layout_alignStart="@+id/confirmPassword" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Sign up"
-        android:id="@+id/button3"
+        android:id="@+id/signUpButton"
         android:textColor="#ffff0002"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:onClick="signUpPressed" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Cancel"
-        android:id="@+id/button4"
+        android:id="@+id/cancelButton"
         android:textColor="#ffff0002"
-        android:layout_alignTop="@+id/button3"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignTop="@+id/signUpButton"
+        android:layout_alignParentEnd="true"
+        android:onClick="cancelPressed" />
 </RelativeLayout>

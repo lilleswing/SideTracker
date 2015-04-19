@@ -12,37 +12,62 @@
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".SignUp"
             android:label="@string/title_activity_sign_up" >
+            android:parentActivityName=".Login" >
+            <!-- Parent activity meta-data to support API level 7+ -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Login" />
         </activity>
         <activity
             android:name=".MainActivity"
             android:label="Medications" >
+            android:parentActivityName=".Login" >
+            <!-- Parent activity meta-data to support API level 7+ -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Login" />
         </activity>
         <activity
             android:name=".Medication"
             android:label="Medication" >
+            android:parentActivityName=".MainActivity" >
+            <!-- Parent activity meta-data to support API level 7+ -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
         </activity>
         <activity
             android:name=".Alarm"
             android:label="@string/title_activity_alarm" >
+            android:parentActivityName=".Medication" >
+            <!-- Parent activity meta-data to support API level 7+ -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Medication" />
         </activity>
         <activity
             android:name=".SideEffects"
             android:label="@string/title_activity_side__effects" >
+            android:parentActivityName=".Medication" >
+            <!-- Parent activity meta-data to support API level 7+ -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.Medication" />
         </activity>
         <activity
             android:name=".AddSideEffect"
             android:label="@string/title_activity_add_side_effect" >
-        </activity>
-        <activity
-            android:name=".ViewSideEffect"
-            android:label="@string/title_activity_view_side_effect" >
+            android:parentActivityName=".SideEffects" >
+            <!-- Parent activity meta-data to support API level 7+ -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".SideEffects" />
         </activity>
     </application>
 

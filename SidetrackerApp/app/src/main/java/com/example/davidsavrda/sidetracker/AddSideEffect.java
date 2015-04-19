@@ -1,9 +1,14 @@
 package com.example.davidsavrda.sidetracker;
 
+import android.content.Context;
+import android.content.Intent;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
 
 
 public class AddSideEffect extends ActionBarActivity {
@@ -12,6 +17,8 @@ public class AddSideEffect extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_side_effect);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
 
@@ -35,5 +42,13 @@ public class AddSideEffect extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void addSideEffect(View v){
+        SideEffect newSideEffect = new SideEffect(((EditText) findViewById(R.id.Name)).getText().toString(),
+                ((EditText) findViewById(R.id.Description)).getText().toString());
+        Context context = getApplicationContext();
+        Intent intent = new Intent(context, SideEffect.class);
+        startActivity(intent);
     }
 }

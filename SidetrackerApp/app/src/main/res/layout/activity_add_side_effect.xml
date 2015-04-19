@@ -22,7 +22,7 @@
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/editText10"
+        android:id="@+id/Name"
         android:layout_marginTop="29dp"
         android:text="Side Effect Name"
         android:layout_below="@+id/textView10"
@@ -31,20 +31,21 @@
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/editText11"
+        android:id="@+id/Description"
         android:layout_marginTop="59dp"
         android:text="Description...."
-        android:layout_below="@+id/editText10"
+        android:layout_below="@+id/Name"
         android:layout_alignEnd="@+id/textView10"
-        android:layout_alignStart="@+id/editText10" />
+        android:layout_alignStart="@+id/Name" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Log Side effect"
-        android:id="@+id/button8"
+        android:id="@+id/addSideEffect"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="39dp"
-        android:textColor="#ffff0002"/>
+        android:textColor="#ffff0002"
+        android:onClick="addSideEffect" />
 </RelativeLayout>

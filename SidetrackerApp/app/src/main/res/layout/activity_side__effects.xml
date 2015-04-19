@@ -21,26 +21,27 @@
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="266dp"
-        android:id="@+id/listView3"
+        android:id="@+id/sideEffects"
         android:layout_below="@+id/textView9"
         android:layout_alignParentStart="true" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/editText9"
-        android:layout_marginTop="34dp"
-        android:text="Description of Side Effect"
-        android:layout_below="@+id/listView3"
-        android:layout_centerHorizontal="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Log New Side Effect"
-        android:id="@+id/button7"
+        android:id="@+id/addSideEffect"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:textColor="#ffff0002"/>
+        android:textColor="#ffff0002"
+        android:onClick="addSideEffect" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Description"
+        android:id="@+id/Description"
+        android:layout_below="@+id/sideEffects"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

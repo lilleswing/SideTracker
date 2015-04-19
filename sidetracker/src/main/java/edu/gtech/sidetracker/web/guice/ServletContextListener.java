@@ -14,7 +14,7 @@ import edu.gtech.sidetracker.web.guice.filters.BasicAuthFilter;
 import edu.gtech.sidetracker.web.guice.filters.UnitOfWorkFilter;
 
 public class ServletContextListener extends GuiceServletContextListener {
-    private static final String SERVICES_PACKAGE = "edu.gtech.sidetracker.web";
+    private static final String SERVICES_PACKAGE = "edu.gtech.sidetracker.web.server";
 
     @Override
     protected Injector getInjector() {

@@ -12,12 +12,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.inject.Provider;
+import com.google.inject.Singleton;
 import edu.gtech.sidetracker.web.dao.CommentDao;
 import edu.gtech.sidetracker.web.guice.RequestState;
 import edu.gtech.sidetracker.web.model.Comment;
 import edu.gtech.sidetracker.web.server.comment.model.WsComment;
 
 @Path( "/comment" )
+@Singleton
 public class CommentService {
 
 	private Provider<RequestState> requestStateProvider;

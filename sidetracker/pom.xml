@@ -111,6 +111,17 @@
 			<version>9.1-901-1.jdbc4</version>
 		</dependency>
 
+		<dependency>
+			<groupId>ca.uhn.hapi.fhir</groupId>
+			<artifactId>hapi-fhir-base</artifactId>
+			<version>0.9</version>
+		</dependency>
+		<dependency>
+			<groupId>ca.uhn.hapi.fhir</groupId>
+			<artifactId>hapi-fhir-structures-dstu</artifactId>
+			<version>0.9</version>
+		</dependency>
+
 	</dependencies>
 
 </project>

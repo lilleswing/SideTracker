@@ -7,6 +7,18 @@ import android.view.MenuItem;
 import android.content.Intent;
 import android.view.View;
 import android.content.Context;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.AsyncTask;
+
 
 
 public class Login extends ActionBarActivity {
@@ -41,10 +53,8 @@ public class Login extends ActionBarActivity {
     }
 
     public void loginClicked(View v){
-        //Do login stuff here
-        //Need to make sure there is no illegal characters
-        //Need to encrypt password and look up in db
-        //If error reset text and and throw an error message
+        String url = "http://my-json-feed";
+
         Context context = getApplicationContext();
         Intent intent = new Intent(context, MainActivity.class);
         startActivity(intent);

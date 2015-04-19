@@ -1,11 +1,16 @@
 package com.example.davidsavrda.sidetracker;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -14,6 +19,8 @@ public class Medication extends ActionBarActivity {
 
     public MedicationInfo med;
     public ListView alarms;
+    public TextView title;
+    public TextView details;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,11 +34,23 @@ public class Medication extends ActionBarActivity {
         alarm.day = "Monday";
         med.alarms.add(alarm);
         //Stuff we will probably keep
+        title = (TextView) findViewById(R.id.Title);
+        title.setText(med.name);
+        details = (TextView) findViewById(R.id.Title);
+        details.setText(med.detail);
         alarms = (ListView) findViewById(R.id.AlarmListView);
         ArrayList<String> times = new ArrayList<String>();
         times.add(alarm.time);
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, times);
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, times);
         alarms.setAdapter(arrayAdapter);
+        alarms.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+
+                String toRemove = arrayAdapter.getItem(position);
+                arrayAdapter.remove(toRemove);
+            }
+        });
     }
 
 
@@ -55,5 +74,17 @@ public class Medication extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void viewSideEffect(View v){
+        Context context = getApplicationContext();
+        Intent intent = new Intent(context, SideEffects.class);
+        startActivity(intent);
+    }
+
+    public void addAlarm(View v){
+        Context context = getApplicationContext();
+        Intent intent = new Intent(context, Alarm.class);
+        startActivity(intent);
     }
 }

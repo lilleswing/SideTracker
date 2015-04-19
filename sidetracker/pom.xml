@@ -118,7 +118,7 @@
 		</dependency>
 		<dependency>
 			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>hapi-fhir-structures-dstu2</artifactId>
+			<artifactId>hapi-fhir-structures-dstu</artifactId>
 			<version>0.9</version>
 		</dependency>
 

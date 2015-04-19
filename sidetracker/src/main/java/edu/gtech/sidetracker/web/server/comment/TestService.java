@@ -8,11 +8,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
 import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.model.api.Bundle;
-import ca.uhn.fhir.model.dstu2.resource.MedicationPrescription;
 import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.rest.client.IGenericClient;
-import ca.uhn.fhir.rest.gclient.StringClientParam;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import edu.gtech.sidetracker.web.guice.RequestState;
@@ -34,8 +31,8 @@ public class TestService {
         FhirContext ctx = new FhirContext();
         IGenericClient client = ctx.newRestfulGenericClient(url);
         IdDt myID = new IdDt("Patient", "3.568001602-01");
-        Bundle bundle = client.search().forResource(MedicationPrescription.class)
-                .where(MedicationPrescription.PATIENT.hasId(myID)).execute();
+        //Bundle bundle = client.search().forResource(MedicationPrescription.class)
+        //        .where(MedicationPrescription.PATIENT.hasId(myID)).execute();
         return "foo";
     }
 }

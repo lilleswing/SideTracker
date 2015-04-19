@@ -22,7 +22,7 @@ public class AppUserDao implements Dao<AppUser> {
 
     @Override
     public List<? extends AppUser> getAll() {
-        return null;
+        throw new UnsupportedOperationException("Not implemented");
     }
 
     @Override
@@ -31,7 +31,8 @@ public class AppUserDao implements Dao<AppUser> {
     }
 
     @Override
-    public void add(final AppUser appUser) {
+    public AppUser add(final AppUser appUser) {
+        throw new UnsupportedOperationException("Not implemented");
     }
 
     public AppUser getByNamePassword(final String username, final String password) {

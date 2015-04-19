@@ -7,6 +7,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.HttpHeaders;
 import javax.xml.bind.DatatypeConverter;
 import java.io.IOException;
@@ -46,8 +47,12 @@ public class BasicAuthFilter implements Filter {
         if (servletRequest instanceof HttpServletRequest) {
             getUserNameAndPassword((HttpServletRequest) servletRequest);
         }
-
-        filterChain.doFilter(servletRequest, servletResponse);
+        if (requestStateProvider.get().getAppUser() != null) {
+            filterChain.doFilter(servletRequest, servletResponse);
+        } else if (servletResponse instanceof HttpServletResponse) {
+            final HttpServletResponse httpResponse  = (HttpServletResponse) servletResponse;
+            httpResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
+        }
     }
 
     @Override
@@ -56,6 +61,9 @@ public class BasicAuthFilter implements Filter {
 
     private void getUserNameAndPassword(final HttpServletRequest servletRequest) {
         final String auth = servletRequest.getHeader(HttpHeaders.AUTHORIZATION);
+        if (auth == null) {
+            return;
+        }
         try {
             final String encodeUserNameAndPassWord = auth.replaceFirst(AUTH_TYPE_BASIC + " ", "");
             byte[] decodedBytes = DatatypeConverter.parseBase64Binary(encodeUserNameAndPassWord);

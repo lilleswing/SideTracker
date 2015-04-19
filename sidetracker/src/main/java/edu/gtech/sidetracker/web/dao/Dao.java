@@ -10,5 +10,5 @@ public interface Dao<T> {
 
 	public T getById(long id);
 
-	void add(T t);
+	public T add(T t);
 }

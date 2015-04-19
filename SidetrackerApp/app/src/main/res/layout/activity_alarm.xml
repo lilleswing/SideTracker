@@ -57,8 +57,8 @@
         android:text="Tuesday"
         android:id="@+id/Tuesday"
         android:checked="false"
-        android:layout_below="@+id/Monday"
-        android:layout_alignParentStart="true" />
+        android:layout_below="@+id/radioGroup"
+        android:layout_alignStart="@+id/Thursday" />
 
     <CheckBox
         android:layout_width="wrap_content"
@@ -75,8 +75,8 @@
         android:text="Thursday"
         android:id="@+id/Thursday"
         android:checked="false"
-        android:layout_below="@+id/Wednesday"
-        android:layout_alignParentStart="true" />
+        android:layout_below="@+id/Tuesday"
+        android:layout_alignEnd="@+id/timePicker" />
 
     <CheckBox
         android:layout_width="wrap_content"
@@ -93,8 +93,8 @@
         android:text="Saturday"
         android:id="@+id/Saturday"
         android:checked="false"
-        android:layout_below="@+id/Friday"
-        android:layout_alignParentStart="true" />
+        android:layout_below="@+id/Thursday"
+        android:layout_alignStart="@+id/Thursday" />
 
     <CheckBox
         android:layout_width="wrap_content"

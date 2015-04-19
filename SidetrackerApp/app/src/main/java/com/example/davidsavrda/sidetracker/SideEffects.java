@@ -30,7 +30,7 @@ public class SideEffects extends ActionBarActivity {
         SideEffect sideEffect1 = new SideEffect("Test", "description");
         sideEffects.add(sideEffect1);
         //Stuff to keep
-        sideEffectList = (ListView) findViewById(R.id.AlarmListView);
+        sideEffectList = (ListView) findViewById(R.id.sideEffects);
         ArrayList<String> names = new ArrayList<String>();
         for(SideEffect sideEffectLoop : sideEffects){
             names.add(sideEffectLoop.name);

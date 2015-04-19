@@ -48,7 +48,7 @@ public class AddSideEffect extends ActionBarActivity {
         SideEffect newSideEffect = new SideEffect(((EditText) findViewById(R.id.Name)).getText().toString(),
                 ((EditText) findViewById(R.id.Description)).getText().toString());
         Context context = getApplicationContext();
-        Intent intent = new Intent(context, SideEffect.class);
+        Intent intent = new Intent(context, SideEffects.class);
         startActivity(intent);
     }
 }

@@ -1,5 +1,7 @@
 package edu.gtech.sidetracker.web.server.medication.model;
 
+import java.util.Set;
+
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import edu.gtech.sidetracker.web.model.Alarm;

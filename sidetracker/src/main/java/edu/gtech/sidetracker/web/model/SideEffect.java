@@ -13,7 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="alarm")
+@Table(name="side_effect")
 public class SideEffect {
     @Id
     @GeneratedValue

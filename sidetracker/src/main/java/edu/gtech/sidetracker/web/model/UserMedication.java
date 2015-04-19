@@ -23,7 +23,7 @@ public class UserMedication {
     @JoinColumn(name="app_user_id")
     private AppUser appUser;
 
-    @ManyToOne(cascade = CascadeType.DETACH, targetEntity = AppUser.class, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.DETACH, targetEntity = Medication.class, fetch = FetchType.LAZY)
     @JoinColumn(name="medication_id")
     private Medication medication;
 

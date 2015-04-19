@@ -1,14 +1,14 @@
 package edu.gtech.sidetracker.web.dao;
 
-import edu.gtech.sidetracker.web.model.Comment;
-
 import java.util.List;
+
+import edu.gtech.sidetracker.web.model.Comment;
 
 public interface Dao<T> {
 
 	public List<? extends T> getAll();
 
-	public T getById(String id);
+	public T getById(long id);
 
-	void add(T t);
+	public T add(T t);
 }

@@ -1,42 +1,53 @@
 package edu.gtech.sidetracker.web.dao;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import edu.gtech.sidetracker.web.model.Comment;
-
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import com.google.inject.Singleton;
+import edu.gtech.sidetracker.web.guice.RequestState;
+import edu.gtech.sidetracker.web.model.Comment;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 
 @Singleton
 public class CommentDao implements Dao<Comment> {
 
-    // TODO (LESWING) hook up to hibernate and sqlite
-    private List<Comment> comments;
+    private final Provider<RequestState> requestStateProvider;
+    private final SessionFactory sessionFactory;
 
     @Inject
-    public CommentDao() {
-        this.comments = new ArrayList<>();
-        final Comment comment = new Comment();
-        comment.setId(0);
-        comment.setUserName("Karl");
-        comment.setComment("Example Service");
-        this.comments.add(comment);
+    public CommentDao(final Provider<RequestState> requestStateProvider,
+                      final SessionFactory sessionFactory) {
+        this.requestStateProvider = requestStateProvider;
+        this.sessionFactory = sessionFactory;
     }
 
     @Override
     public List<? extends Comment> getAll() {
-        return comments;
+        final Session session = sessionFactory.getCurrentSession();
+        final Criteria criteria = session.createCriteria(Comment.class);
+        return criteria.list();
     }
 
     @Override
-    public Comment getById(String id) {
-        final int idInt = Integer.valueOf(id);
-        return comments.get(idInt);
+    public Comment getById(long id) {
+        final Session session = sessionFactory.getCurrentSession();
+        return (Comment) session.get(Comment.class, id);
     }
 
     @Override
-    public void add(Comment comment) {
-        comment.setId(this.comments.size());
-        this.comments.add(comment);
+    public Comment add(Comment comment) {
+        comment.setAppUser(requestStateProvider.get().getAppUser());
+        final Session session = sessionFactory.openSession();
+        final Transaction transaction = session.beginTransaction();
+        final Serializable primaryKey = session.save(comment);
+        transaction.commit();
+        session.close();
+        return getById(((Number)primaryKey).longValue());
     }
 }

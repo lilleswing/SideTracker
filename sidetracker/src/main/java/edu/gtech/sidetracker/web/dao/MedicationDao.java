@@ -41,10 +41,4 @@ public class MedicationDao implements Dao<Medication> {
         return null;
     }
 
-    public List<UserMedication> getForUser() {
-        final AppUser appUser = requestStateProvider.get().getAppUser();
-        final Criteria criteria = sessionFactory.getCurrentSession().createCriteria(UserMedication.class);
-        criteria.createCriteria("appUser").add(Restrictions.eq("id", appUser.getId()));
-        return criteria.list();
-    }
 }

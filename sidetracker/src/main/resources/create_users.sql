@@ -1,3 +1,4 @@
+CREATE SEQUENCE hibernate_sequence START 1;
 CREATE TABLE app_user (
   id SERIAL PRIMARY KEY,
   username TEXT,

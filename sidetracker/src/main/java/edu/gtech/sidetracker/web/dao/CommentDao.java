@@ -1,42 +1,37 @@
 package edu.gtech.sidetracker.web.dao;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import edu.gtech.sidetracker.web.model.Comment;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 
 @Singleton
 public class CommentDao implements Dao<Comment> {
 
-    // TODO (LESWING) hook up to hibernate and sqlite
-    private List<Comment> comments;
+    private final SessionFactory sessionFactory;
 
     @Inject
-    public CommentDao() {
-        this.comments = new ArrayList<>();
-        final Comment comment = new Comment();
-        comment.setId(0);
-        comment.setUserName("Karl");
-        comment.setComment("Example Service");
-        this.comments.add(comment);
+    public CommentDao(final SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
     }
 
     @Override
     public List<? extends Comment> getAll() {
-        return comments;
+        return new ArrayList<>();
     }
 
     @Override
-    public Comment getById(String id) {
-        final int idInt = Integer.valueOf(id);
-        return comments.get(idInt);
+    public Comment getById(long id) {
+        final Session session = sessionFactory.getCurrentSession();
+        return (Comment) session.get(Comment.class, id);
     }
 
     @Override
     public void add(Comment comment) {
-        comment.setId(this.comments.size());
-        this.comments.add(comment);
+        int i = 1;
     }
 }

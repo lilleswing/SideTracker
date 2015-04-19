@@ -1,11 +1,26 @@
 package edu.gtech.sidetracker.web.model;
 
+import javax.persistence.Basic;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
+import com.google.inject.Inject;
+
+@Entity
 public class Comment {
 
+    @Id
+    @GeneratedValue
     private long id;
+
+    @Basic
     private String userName;
+
+    @Basic
     private String comment;
 
+    @Inject
     public Comment() {
     }
 

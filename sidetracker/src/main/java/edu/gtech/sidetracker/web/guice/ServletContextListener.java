@@ -10,6 +10,8 @@ import com.google.inject.servlet.GuiceServletContextListener;
 import com.sun.jersey.api.core.PackagesResourceConfig;
 import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
+import edu.gtech.sidetracker.web.guice.filters.BasicAuthFilter;
+import edu.gtech.sidetracker.web.guice.filters.UnitOfWorkFilter;
 
 public class ServletContextListener extends GuiceServletContextListener {
     private static final String SERVICES_PACKAGE = "edu.gtech.sidetracker.web";
@@ -30,6 +32,8 @@ public class ServletContextListener extends GuiceServletContextListener {
                 bind(MessageBodyReader.class).to(JacksonJsonProvider.class);
                 bind(MessageBodyWriter.class).to(JacksonJsonProvider.class);
 
+                filter("/api/*").through(UnitOfWorkFilter.class);
+                filter("/api/*").through(BasicAuthFilter.class);
                 serve("/api/*").with(GuiceContainer.class);
             }
         }, new DbModule());

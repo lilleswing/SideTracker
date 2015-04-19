@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.inject.Singleton;
+import edu.gtech.sidetracker.web.model.AppUser;
 import edu.gtech.sidetracker.web.model.Comment;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
@@ -25,6 +26,7 @@ public class HibernateUtil {
         try {
             final Configuration cfg = new Configuration();
             cfg.addAnnotatedClass(Comment.class);
+            cfg.addAnnotatedClass(AppUser.class);
             cfg.configure();
             final ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                     .applySettings(cfg.getProperties()).build();

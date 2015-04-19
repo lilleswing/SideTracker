@@ -1,7 +1,9 @@
 package edu.gtech.sidetracker.web.server;
 
+import com.google.inject.Provider;
 import edu.gtech.sidetracker.web.dao.CommentDao;
 import edu.gtech.sidetracker.web.dao.Dao;
+import edu.gtech.sidetracker.web.guice.RequestState;
 import edu.gtech.sidetracker.web.model.Comment;
 
 import javax.inject.Inject;
@@ -16,10 +18,13 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 @Path( "/comment" )
 public class CommentService {
 
+	private Provider<RequestState> requestStateProvider;
 	private CommentDao commentDao;
 
 	@Inject
-	public CommentService(CommentDao commentDao) {
+	public CommentService(Provider<RequestState> requestStateProvider,
+						  CommentDao commentDao) {
+		this.requestStateProvider = requestStateProvider;
 		this.commentDao = commentDao;
 	}
 

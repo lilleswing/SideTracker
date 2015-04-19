@@ -58,7 +58,7 @@
             <!-- Parent activity meta-data to support API level 7+ -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.Medication" />
+                android:value=".Medication" />
         </activity>
         <activity
             android:name=".AddSideEffect"

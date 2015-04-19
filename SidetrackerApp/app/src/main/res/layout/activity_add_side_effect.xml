@@ -24,19 +24,19 @@
         android:layout_height="wrap_content"
         android:id="@+id/Name"
         android:layout_marginTop="29dp"
-        android:text="Side Effect Name"
         android:layout_below="@+id/textView10"
-        android:layout_alignStart="@+id/textView10" />
+        android:layout_alignStart="@+id/textView10"
+        android:hint="Side Effect Name" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/Description"
         android:layout_marginTop="59dp"
-        android:text="Description...."
         android:layout_below="@+id/Name"
         android:layout_alignEnd="@+id/textView10"
-        android:layout_alignStart="@+id/Name" />
+        android:layout_alignStart="@+id/Name"
+        android:hint="Description...." />
 
     <Button
         android:layout_width="wrap_content"

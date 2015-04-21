@@ -2,9 +2,15 @@ package edu.gtech.sidetracker.web.guice;
 
 
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Scanner;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -29,9 +35,12 @@ public class HibernateUtil {
 
     @Inject
     public HibernateUtil() {
+        destroy();
         sessionFactory= buildSessionFactory();
         seed();
     }
+
+
 
     private static SessionFactory buildSessionFactory() {
         try {
@@ -56,72 +65,23 @@ public class HibernateUtil {
         return sessionFactory;
     }
 
+    private void destroy() {
+        try {
+            Files.deleteIfExists(Paths.get("/tmp/sidetracker.mv.db"));
+            Files.delete(Paths.get("/tmp/sidetracker.mv.db"));
+        } catch (Exception ignored) {
+        }
+    }
+
     public void seed() {
         try {
+            final String query =  getQuery();
             final Session session = sessionFactory.openSession();
             final Transaction transaction = session.beginTransaction();
             session.doWork(new Work() {
                 @Override
                 public void execute(final Connection connection) throws SQLException {
-                    final PreparedStatement preparedStatement = connection.prepareStatement(
-                            "CREATE SEQUENCE hibernate_sequence START 1;\n" +
-                                    "CREATE TABLE app_user (\n" +
-                                    "  id SERIAL PRIMARY KEY,\n" +
-                                    "  username TEXT,\n" +
-                                    "  password TEXT,\n" +
-                                    "  fhir_id TEXT\n" +
-                                    ");\n" +
-                                    "\n" +
-                                    "CREATE TABLE comment (\n" +
-                                    "  id SERIAL PRIMARY KEY ,\n" +
-                                    "  comment TEXT,\n" +
-                                    "  app_user_id BIGINT\n" +
-                                    ");\n" +
-                                    "\n" +
-                                    "ALTER TABLE comment ADD CONSTRAINT comment_app_user_fk FOREIGN KEY (app_user_id) REFERENCES app_user(id);\n" +
-                                    "\n" +
-                                    "CREATE TABLE medication (\n" +
-                                    "  id SERIAL PRIMARY KEY,\n" +
-                                    "  name TEXT\n" +
-                                    ");\n" +
-                                    "\n" +
-                                    "CREATE TABLE user_medication (\n" +
-                                    "  id SERIAL PRIMARY KEY,\n" +
-                                    "  app_user_id BIGINT,\n" +
-                                    "  medication_id BIGINT\n" +
-                                    ");\n" +
-                                    "\n" +
-                                    "ALTER TABLE user_medication ADD CONSTRAINT user_medication_user_fk FOREIGN KEY (app_user_id) REFERENCES app_user(id);\n" +
-                                    "ALTER TABLE user_medication ADD CONSTRAINT user_medication_medication_fk\n" +
-                                    "FOREIGN KEY (app_user_id) REFERENCES medication(id);\n" +
-                                    "\n" +
-                                    "CREATE TABLE alarm (\n" +
-                                    "  id SERIAL PRIMARY KEY,\n" +
-                                    "  user_medication_id BIGINT,\n" +
-                                    "  time TEXT,\n" +
-                                    "  day_of_week TEXT\n" +
-                                    ");\n" +
-                                    "\n" +
-                                    "ALTER TABLE alarm ADD CONSTRAINT  alarm_user_medication_fk\n" +
-                                    "FOREIGN KEY (user_medication_id) REFERENCES user_medication (id);\n" +
-                                    "\n" +
-                                    "CREATE TABLE side_effect (\n" +
-                                    "  id SERIAL PRIMARY KEY,\n" +
-                                    "  user_medication_id BIGINT,\n" +
-                                    "  description TEXT\n" +
-                                    ");\n" +
-                                    "\n" +
-                                    "ALTER TABLE side_effect ADD CONSTRAINT  side_effect_user_medication_fk\n" +
-                                    "FOREIGN KEY (user_medication_id) REFERENCES user_medication (id);\n" +
-                                    "\n" +
-                                    "INSERT INTO app_user (username, password) VALUES ('martha', 'password');\n" +
-                                    "INSERT INTO medication (name) VALUES ('viagra');\n" +
-                                    "INSERT INTO medication (name) VALUES ('prozac');\n" +
-                                    "\n" +
-                                    "INSERT INTO user_medication (app_user_id, medication_id) (\n" +
-                                    "    SELECT app_user.id, medication.id FROM app_user, medication\n" +
-                                    ");"
-                    );
+                    final PreparedStatement preparedStatement = connection.prepareStatement(query);
                     preparedStatement.execute();
                     preparedStatement.close();
                 }
@@ -130,6 +90,16 @@ public class HibernateUtil {
             session.close();
         } catch (Exception pass) {
             int i = 1;
+        }
+    }
+
+    public String getQuery() {
+        try {
+            final ClassLoader classLoader = getClass().getClassLoader();
+            final File sqlFile = new File(classLoader.getResource("create_users.sql").getFile());
+            return new Scanner(sqlFile).useDelimiter("\\Z").next();
+        } catch (FileNotFoundException ignored) {
+            return "";
         }
     }
 }

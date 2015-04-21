@@ -42,4 +42,9 @@ public class AppUserDao implements Dao<AppUser> {
         criteria.add(Restrictions.eq("password", password));
         return (AppUser) criteria.uniqueResult();
     }
+
+    public void update(final AppUser appUser) {
+        final Session session = sessionFactory.getCurrentSession();
+        session.update(appUser);
+    }
 }

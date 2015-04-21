@@ -2,7 +2,8 @@ CREATE SEQUENCE hibernate_sequence START 1;
 CREATE TABLE app_user (
   id SERIAL PRIMARY KEY,
   username TEXT,
-  password TEXT
+  password TEXT,
+  fhir_id TEXT
 );
 
 CREATE TABLE comment (

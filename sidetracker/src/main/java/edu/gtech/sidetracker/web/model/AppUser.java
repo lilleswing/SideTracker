@@ -26,6 +26,10 @@ public class AppUser {
     @Column(name = "password")
     private String password;
 
+    @Basic
+    @Column(name = "fhir_id")
+    private String fhirId;
+
     @OneToMany(mappedBy = "appUser", targetEntity = Comment.class,
             fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
     private Set<Comment> commentSet;
@@ -63,5 +67,13 @@ public class AppUser {
 
     public void setUsername(final String username) {
         this.username = username;
+    }
+
+    public String getFhirId() {
+        return fhirId;
+    }
+
+    public void setFhirId(final String fhirId) {
+        this.fhirId = fhirId;
     }
 }

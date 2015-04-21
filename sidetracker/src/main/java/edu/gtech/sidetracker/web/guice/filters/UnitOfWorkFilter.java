@@ -30,10 +30,15 @@ public class UnitOfWorkFilter implements Filter{
     public void doFilter(final ServletRequest servletRequest,
                          final ServletResponse servletResponse,
                          final FilterChain filterChain) throws IOException, ServletException {
-        this.sessionFactory.getCurrentSession().beginTransaction();
-        filterChain.doFilter(servletRequest, servletResponse);
-        this.sessionFactory.getCurrentSession().getTransaction().commit();
-        this.sessionFactory.getCurrentSession().close();
+        try {
+            this.sessionFactory.getCurrentSession().beginTransaction();
+            filterChain.doFilter(servletRequest, servletResponse);
+            this.sessionFactory.getCurrentSession().getTransaction().commit();
+        } catch (Exception ex) {
+            int i = 1;
+        } finally {
+            this.sessionFactory.getCurrentSession().close();
+        }
     }
 
     @Override

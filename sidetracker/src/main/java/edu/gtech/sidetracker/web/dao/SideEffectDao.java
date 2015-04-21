@@ -33,7 +33,7 @@ public class SideEffectDao implements Dao<SideEffect>{
 
     @Override
     public SideEffect getById(final long id) {
-        return null;
+        return (SideEffect) sessionFactory.getCurrentSession().get(SideEffect.class, id);
     }
 
     @Override
@@ -54,7 +54,7 @@ public class SideEffectDao implements Dao<SideEffect>{
             sideEffect.setUserMedication(userMedication);
             return add(sideEffect);
         }
-        final SideEffect existing = new SideEffect();
+        final SideEffect existing = getById(wsSideEffect.getId());
         existing.setDescription(wsSideEffect.getDescription());
         sessionFactory.getCurrentSession().update(existing);
         return existing;

@@ -7,10 +7,12 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 
 public class SignUp extends ActionBarActivity {
-
+    //Not sure what the URL will be for the sign up yet
+    public final static String apiURL = "localhost:8080/signUp?";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,9 +44,15 @@ public class SignUp extends ActionBarActivity {
 
 
     public void signUpPressed(View v){
-        //Still need to do the database and verfication tasks to ensure sign up is correct
+        //Make the call here
+        //After the call if there is an error
+        ((TextView) findViewById(R.id.username)).setText("");
+        ((TextView) findViewById(R.id.Password)).setText("");
+        ((TextView) findViewById(R.id.confirmPassword)).setText("");
+        //Otherwise we go to the main view
         Context context = getApplicationContext();
         Intent intent = new Intent(context, MainActivity.class);
+        intent.putExtra("Username", ((TextView) findViewById(R.id.username)).getText().toString());
         startActivity(intent);
     }
 

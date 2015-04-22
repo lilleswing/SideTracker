@@ -9,15 +9,18 @@ public class MedicationInfo {
     String name;
     String detail;
     ArrayList<AlarmInfo> alarms;
+    ArrayList<SideEffect> sideEffects;
 
     public MedicationInfo(String name, String detail){
         this.name = name;
         this.detail = detail;
         this.alarms = new ArrayList<AlarmInfo>();
+        this.sideEffects = new ArrayList<SideEffect>();
     }
 
     public MedicationInfo(){
         this.alarms = new ArrayList<AlarmInfo>();
+        this.sideEffects = new ArrayList<SideEffect>();
     }
 
 }

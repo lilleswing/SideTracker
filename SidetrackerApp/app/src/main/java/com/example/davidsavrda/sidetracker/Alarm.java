@@ -20,10 +20,14 @@ import java.util.ArrayList;
 public class Alarm extends ActionBarActivity {
     ArrayList<AlarmInfo> alarms;
     TimePicker time;
+    String username;
+    String medicationName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm);
+        username = getIntent().getExtras().getString("Username");
+        medicationName = getIntent().getExtras().getString("Medication");
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         alarms = new ArrayList<AlarmInfo>();

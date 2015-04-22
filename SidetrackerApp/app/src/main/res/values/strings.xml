@@ -11,4 +11,5 @@
     <string name="title_activity_side__effects">Side_Effects</string>
     <string name="title_activity_add_side_effect">AddSideEffect</string>
     <string name="title_activity_view_side_effect">ViewSideEffect</string>
+    <string name="title_activity_alarm_alert">AlarmAlert</string>
 </resources>

@@ -1,5 +1,6 @@
 package edu.gtech.sidetracker.web.server.user;
 
+import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 
@@ -24,6 +25,15 @@ public class UserService {
                        final DaoProvider daoProvider) {
         this.requestStateProvider = requestStateProvider;
         this.appUserDao = daoProvider.getAppUserDao();
+    }
+
+    @GET
+    public WsAppUser getAppUser() {
+        final RequestState requestState = requestStateProvider.get();
+        final AppUser appUser = requestState.getAppUser();
+        final WsAppUser wsAppUser = new WsAppUser();
+        wsAppUser.setFhirId(appUser.getFhirId());
+        return wsAppUser;
     }
 
     @PUT

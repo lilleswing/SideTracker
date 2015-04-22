@@ -48,7 +48,7 @@ CREATE TABLE side_effect (
 ALTER TABLE side_effect ADD CONSTRAINT  side_effect_user_medication_fk
 FOREIGN KEY (user_medication_id) REFERENCES user_medication (id);
 
-INSERT INTO app_user (username, password) VALUES ('martha', 'password');
+INSERT INTO app_user (username, password, fhir_id) VALUES ('martha', 'password', '3.568001602-01');
 INSERT INTO medication (name) VALUES ('viagra');
 INSERT INTO medication (name) VALUES ('prozac');
 

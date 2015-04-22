@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -75,5 +76,25 @@ public class AppUser {
 
     public void setFhirId(final String fhirId) {
         this.fhirId = fhirId;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, username, password, fhirId);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final AppUser other = (AppUser) obj;
+        return Objects.equals(this.id, other.id)
+                && Objects.equals(this.username, other.username)
+                && Objects.equals(this.password, other.password)
+                && Objects.equals(this.fhirId, other.fhirId);
     }
 }

@@ -9,7 +9,9 @@ import edu.gtech.sidetracker.web.guice.RequestState;
 import edu.gtech.sidetracker.web.model.AppUser;
 import edu.gtech.sidetracker.web.model.UserMedication;
 import org.hibernate.Criteria;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 
 @Singleton
@@ -38,7 +40,12 @@ public class UserMedicationDao implements Dao<UserMedication> {
 
     @Override
     public UserMedication add(final UserMedication userMedication) {
-        return null;
+        final Session session = sessionFactory.openSession();
+        final Transaction transaction = session.beginTransaction();
+        session.save(userMedication);
+        transaction.commit();
+        session.close();
+        return getById(userMedication.getId());
     }
 
     public List<UserMedication> getForUser() {

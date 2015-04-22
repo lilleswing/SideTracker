@@ -10,6 +10,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -76,5 +77,26 @@ public class UserMedication {
 
     public void setSideEffectSet(final Set<SideEffect> sideEffectSet) {
         this.sideEffectSet = sideEffectSet;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, appUser, medication, alarmSet, sideEffectSet);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final UserMedication other = (UserMedication) obj;
+        return Objects.equals(this.id, other.id)
+                && Objects.equals(this.appUser, other.appUser)
+                && Objects.equals(this.medication, other.medication)
+                && Objects.equals(this.alarmSet, other.alarmSet)
+                && Objects.equals(this.sideEffectSet, other.sideEffectSet);
     }
 }

@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.Objects;
 
 @Entity
 @Table(name="medication")
@@ -17,6 +18,7 @@ public class Medication {
     @Basic
     @Column(name = "name")
     private String name;
+
     public Medication() {
     }
 
@@ -34,5 +36,23 @@ public class Medication {
 
     public void setName(final String name) {
         this.name = name;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final Medication other = (Medication) obj;
+        return Objects.equals(this.id, other.id)
+                && Objects.equals(this.name, other.name);
     }
 }

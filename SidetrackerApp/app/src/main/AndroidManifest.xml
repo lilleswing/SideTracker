@@ -10,7 +10,7 @@
         <activity
             android:name=".Login"
             android:label="@string/app_name"
-            android:permission ="android:permission.INTERNET">
+            android:permission ="android.permission.INTERNET">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -20,7 +20,7 @@
             android:name=".SignUp"
             android:label="@string/title_activity_sign_up"
             android:parentActivityName=".Login"
-            android:permission ="android:permission.INTERNET">
+            android:permission ="android.permission.INTERNET">
             <!-- Parent activity meta-data to support API level 7+ -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -30,7 +30,7 @@
             android:name=".MainActivity"
             android:label="Medications"
             android:parentActivityName=".Login"
-            android:permission ="android:permission.INTERNET">
+            android:permission ="android.permission.INTERNET">
             <!-- Parent activity meta-data to support API level 7+ -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -40,7 +40,7 @@
             android:name=".Medication"
             android:label="Medication"
             android:parentActivityName=".MainActivity"
-            android:permission ="android:permission.INTERNET">
+            android:permission ="android.permission.INTERNET">
             <!-- Parent activity meta-data to support API level 7+ -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -50,7 +50,7 @@
             android:name=".Alarm"
             android:label="@string/title_activity_alarm"
             android:parentActivityName=".Medication"
-            android:permission ="android:permission.INTERNET">
+            android:permission ="android.permission.INTERNET">
             <!-- Parent activity meta-data to support API level 7+ -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -60,7 +60,7 @@
             android:name=".SideEffects"
             android:label="@string/title_activity_side__effects"
             android:parentActivityName=".Medication"
-            android:permission ="android:permission.INTERNET">
+            android:permission ="android.permission.INTERNET">
             <!-- Parent activity meta-data to support API level 7+ -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -70,7 +70,7 @@
             android:name=".AddSideEffect"
             android:label="@string/title_activity_add_side_effect"
             android:parentActivityName=".SideEffects"
-            android:permission ="android:permission.INTERNET">
+            android:permission ="android.permission.INTERNET">
             <!-- Parent activity meta-data to support API level 7+ -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

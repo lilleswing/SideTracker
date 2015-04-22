@@ -67,4 +67,12 @@
         android:layout_alignStart="@+id/username"
         android:layout_marginTop="60dp" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/ErrorMessage"
+        android:layout_above="@+id/button"
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>

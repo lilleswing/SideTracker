@@ -13,12 +13,19 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 
 public class SideEffects extends ActionBarActivity {
     ArrayList<SideEffect> sideEffects;
     ListView sideEffectList;
+    String username;
+    String medicationName;
+    JSONObject jsonSides;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,9 +33,26 @@ public class SideEffects extends ActionBarActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         sideEffects = new ArrayList<SideEffect>();
-        //Stuff that will be replaced by db calls
-        SideEffect sideEffect1 = new SideEffect("Test", "description");
-        sideEffects.add(sideEffect1);
+        username = getIntent().getExtras().getString("Username");
+        medicationName = getIntent().getExtras().getString("Medication");
+        String sideEffectString = getIntent().getExtras().getString("SideEffects");
+        try {
+             jsonSides = new JSONObject(sideEffectString);
+             JSONArray sides = jsonSides.getJSONArray("SideEffects");
+             for(int index = 0; index < sides.length(); index++){
+                 JSONObject side = sides.getJSONObject(index);
+                 SideEffect newSideEffect = new SideEffect();
+                 newSideEffect.name = side.getString("Name");
+                 newSideEffect.description = side.getString("Description");
+                 sideEffects.add(newSideEffect);
+             }
+
+        }
+        catch(JSONException e){
+
+        }
+
+
         //Stuff to keep
         sideEffectList = (ListView) findViewById(R.id.sideEffects);
         ArrayList<String> names = new ArrayList<String>();
@@ -75,4 +99,6 @@ public class SideEffects extends ActionBarActivity {
         Intent intent = new Intent(context, AddSideEffect.class);
         startActivity(intent);
     }
+
+
 }

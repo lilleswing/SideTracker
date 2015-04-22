@@ -13,14 +13,21 @@ import android.widget.ListView;
 import android.widget.ArrayAdapter;
 import android.view.View;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-public class MainActivity extends ActionBarActivity {
+
+public class MainActivity extends ActionBarActivity{
     private ArrayList<MedicationInfo> medications;
     private ListView medicationsList;
+    String username;
+    String URL = "http://localhost/medication";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        username = getIntent().getExtras().getString("Username");
         //Placeholder work so that we can make sure everything more or less works without FHIR and DB
         //This will be replaced with a look up to get all of the medications and their information for the person
         medications = new ArrayList<MedicationInfo>();
@@ -31,6 +38,11 @@ public class MainActivity extends ActionBarActivity {
             AlarmInfo alarm = new AlarmInfo();
             alarm.day = "Monday";
             alarm.time = "9:00";
+            newMed.alarms.add(alarm);
+            SideEffect side = new SideEffect();
+            side.name = "Test Side Effect";
+            side.description = "Random Side effect for testing";
+            newMed.sideEffects.add(side);
             medications.add(newMed);
         }
         //Now we get back to handling things that will actually be there
@@ -47,6 +59,13 @@ public class MainActivity extends ActionBarActivity {
 
                 Context context = getApplicationContext();
                 Intent intent = new Intent(context, Medication.class);
+                intent.putExtra("Username", username);
+                try {
+                    intent.putExtra("Medication", createMedicationInfoString(medications.get(position)).toString());
+                }
+                catch(JSONException e){
+
+                }
                 startActivity(intent);
                 }
             });
@@ -74,6 +93,34 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public JSONObject createMedicationInfoString(MedicationInfo info) throws JSONException{
+        JSONObject infoToPass = new JSONObject();
+        infoToPass.put("Name", info.name);
+        infoToPass.put("Details", info.detail);
+        JSONArray alarms = new JSONArray();
+        if(info.alarms.size() > 0) {
+            for (AlarmInfo alarm : info.alarms) {
+                JSONObject jsonAlarm = new JSONObject();
+                jsonAlarm.put("Day", alarm.day);
+                jsonAlarm.put("Time", alarm.time);
+                alarms.put(jsonAlarm);
+            }
+        }
+
+        JSONArray sideEffects = new JSONArray();
+        if(info.sideEffects.size() > 0) {
+            for (SideEffect side : info.sideEffects) {
+                JSONObject jsonSideEffect = new JSONObject();
+                jsonSideEffect.put("Name", side.name);
+                jsonSideEffect.put("Description", side.description);
+                sideEffects.put(jsonSideEffect);
+            }
+        }
+        infoToPass.put("SideEffects", sideEffects);
+        infoToPass.put("Alarms", alarms);
+        return infoToPass;
     }
 
 

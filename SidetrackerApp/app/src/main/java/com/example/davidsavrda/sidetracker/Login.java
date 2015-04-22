@@ -1,5 +1,6 @@
 package com.example.davidsavrda.sidetracker;
 
+import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -7,22 +8,30 @@ import android.view.MenuItem;
 import android.content.Intent;
 import android.view.View;
 import android.content.Context;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import android.widget.TextView;
+
+
 import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.AsyncTask;
+import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.IOError;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 
 public class Login extends ActionBarActivity {
-
+    public final static String apiURL = "localhost:8080/login?";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,10 +62,18 @@ public class Login extends ActionBarActivity {
     }
 
     public void loginClicked(View v){
-        String url = "http://my-json-feed";
-
         Context context = getApplicationContext();
+        String url = "http://localhost:8080/login?username=" + ((TextView) findViewById(R.id.username)).getText().toString() +
+                "&password=" + ((TextView) findViewById(R.id.Password));
+        //This occurs when the login was unssuccessful
+        if(false) {
+            ((TextView) findViewById(R.id.ErrorMessage)).setText("Error logging in");
+            ((TextView) findViewById(R.id.username)).setText("");
+            ((TextView) findViewById(R.id.Password)).setText("");
+        }
+        //This occurs when the login was successful
         Intent intent = new Intent(context, MainActivity.class);
+        intent.putExtra("Username", ((TextView) findViewById(R.id.username)).getText().toString());
         startActivity(intent);
     }
 
@@ -66,4 +83,5 @@ public class Login extends ActionBarActivity {
         startActivity(intent);
 
     }
+
 }

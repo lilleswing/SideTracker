@@ -1,14 +1,21 @@
+package edu.gtech.sidetracker.web.server;
+
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.model.api.Bundle;
 import ca.uhn.fhir.model.dstu.resource.MedicationPrescription;
-import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.rest.client.IGenericClient;
 import ca.uhn.fhir.rest.gclient.StringClientParam;
+import org.junit.Ignore;
 import org.junit.Test;
+import org.xml.sax.SAXException;
 
-public class Fhir {
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
+
+public class FhirTest {
 
     @Test
+    @Ignore
     public void test() {
         // Create a client (only needed once)
         FhirContext ctx = new FhirContext();

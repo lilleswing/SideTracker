@@ -9,6 +9,7 @@ import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import edu.gtech.sidetracker.web.dao.AppUserDao;
 import edu.gtech.sidetracker.web.dao.DaoProvider;
+import edu.gtech.sidetracker.web.fhir.PatientUpdater;
 import edu.gtech.sidetracker.web.guice.RequestState;
 import edu.gtech.sidetracker.web.model.AppUser;
 import edu.gtech.sidetracker.web.server.user.model.WsAppUser;
@@ -18,12 +19,15 @@ import edu.gtech.sidetracker.web.server.user.model.WsAppUser;
 public class UserService {
 
     private final Provider<RequestState> requestStateProvider;
+    private final PatientUpdater patientUpdater;
     private final AppUserDao appUserDao;
 
     @Inject
     public UserService(final Provider<RequestState> requestStateProvider,
+                       final PatientUpdater patientUpdater,
                        final DaoProvider daoProvider) {
         this.requestStateProvider = requestStateProvider;
+        this.patientUpdater = patientUpdater;
         this.appUserDao = daoProvider.getAppUserDao();
     }
 
@@ -42,6 +46,7 @@ public class UserService {
         final AppUser appUser = requestState.getAppUser();
         appUser.setFhirId(wsAppUser.getFhirId());
         appUserDao.update(appUser);
+        patientUpdater.update(appUser);
         return wsAppUser;
     }
 }

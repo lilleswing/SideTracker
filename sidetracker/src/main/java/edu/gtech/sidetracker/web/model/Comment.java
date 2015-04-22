@@ -13,6 +13,8 @@ import javax.persistence.Table;
 
 import com.google.inject.Inject;
 
+import java.util.Objects;
+
 @Entity
 @Table(name="comment")
 public class Comment {
@@ -55,5 +57,23 @@ public class Comment {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, comment);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final Comment other = (Comment) obj;
+        return Objects.equals(this.id, other.id)
+                && Objects.equals(this.comment, other.comment);
     }
 }

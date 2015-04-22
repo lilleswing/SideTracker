@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.util.Objects;
 
 @Entity
 @Table(name="side_effect")
@@ -52,5 +53,23 @@ public class SideEffect {
 
     public void setUserMedication(final UserMedication userMedication) {
         this.userMedication = userMedication;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, description);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final SideEffect other = (SideEffect) obj;
+        return Objects.equals(this.id, other.id)
+                && Objects.equals(this.description, other.description);
     }
 }

@@ -19,7 +19,7 @@ public class FhirClient {
 
     @Inject
     public FhirClient() {
-        url = "https://taurus.i3l.gatech.edu:8443/HealthPort/fhir";
+        url = "https://healthport.i3l.gatech.edu:8443/dstu1/fhir";
     }
 
     public String getPatient(final AppUser appUser) {

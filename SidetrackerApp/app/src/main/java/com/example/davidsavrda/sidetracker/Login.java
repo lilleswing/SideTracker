@@ -10,7 +10,6 @@ import android.view.View;
 import android.content.Context;
 import android.widget.TextView;
 
-
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
@@ -31,11 +30,17 @@ import java.net.URISyntaxException;
 
 
 public class Login extends ActionBarActivity {
+    private TextView usernameEditText;
+    private TextView passwordEditText;
+
     public final static String apiURL = "localhost:8080/login?";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        usernameEditText = ((TextView) findViewById(R.id.username));
+        passwordEditText = ((TextView) findViewById(R.id.Password));
     }
 
 
@@ -63,25 +68,34 @@ public class Login extends ActionBarActivity {
 
     public void loginClicked(View v){
         Context context = getApplicationContext();
-        String url = "http://localhost:8080/login?username=" + ((TextView) findViewById(R.id.username)).getText().toString() +
-                "&password=" + ((TextView) findViewById(R.id.Password));
+
+        String givenUsername = usernameEditText.getText().toString();
+        String givenPassword = passwordEditText.getText().toString();
+
+        connectWithHttpGet(givenUsername, givenPassword);
+
+        //String url = "http://localhost:8080/login?username=" + ((TextView) findViewById(R.id.username)).getText().toString() +
+        //        "&password=" + ((TextView) findViewById(R.id.Password));
         //This occurs when the login was unssuccessful
-        if(false) {
-            ((TextView) findViewById(R.id.ErrorMessage)).setText("Error logging in");
-            ((TextView) findViewById(R.id.username)).setText("");
-            ((TextView) findViewById(R.id.Password)).setText("");
-        }
+        //if(false) {
+        //
+        //}
         //This occurs when the login was successful
-        Intent intent = new Intent(context, MainActivity.class);
-        intent.putExtra("Username", ((TextView) findViewById(R.id.username)).getText().toString());
-        startActivity(intent);
+        //Intent intent = new Intent(context, MainActivity.class);
+        //intent.putExtra("Username", ((TextView) findViewById(R.id.username)).getText().toString());
+        //startActivity(intent);
+    }
+
+    private void connectWithHttpGet(String givenUsername, String givenPassword){
+        HttpClient client = new DefaultHttpClient();
+        String requestString = "http://localhost:8080/login?username=" + givenUsername + "&password=" + givenPassword;
+        HttpGet request = new HttpGet(requestString);
+        //HttpResponse httpResponse = client.execute(request);
     }
 
     public void signUpPressed(View v){
         Context context = getApplicationContext();
         Intent intent = new Intent(context, SignUp.class);
         startActivity(intent);
-
     }
-
 }

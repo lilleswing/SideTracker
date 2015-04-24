@@ -10,6 +10,7 @@ import android.view.View;
 import android.content.Context;
 import android.widget.TextView;
 
+import com.example.davidsavrda.sidetracker.client.RestClient;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
@@ -71,8 +72,12 @@ public class Login extends ActionBarActivity {
 
         String givenUsername = usernameEditText.getText().toString();
         String givenPassword = passwordEditText.getText().toString();
+        RestClient.setAuth(givenUsername, givenPassword);
 
-        connectWithHttpGet(givenUsername, givenPassword);
+        final boolean isLoggedIn = RestClient.login();
+        int i = 1;
+        // What the fuck am I supposed to do now?
+        // Why is this a void?
 
         //String url = "http://localhost:8080/login?username=" + ((TextView) findViewById(R.id.username)).getText().toString() +
         //        "&password=" + ((TextView) findViewById(R.id.Password));

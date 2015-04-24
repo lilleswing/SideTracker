@@ -1,8 +1,9 @@
 package com.example.davidsavrda.sidetracker;
 
 /**
- * Created by davidsavrda on 4/18/15.
+ * Replace with WsSideEffect
  */
+@Deprecated
 public class SideEffect {
     String name;
     String description;

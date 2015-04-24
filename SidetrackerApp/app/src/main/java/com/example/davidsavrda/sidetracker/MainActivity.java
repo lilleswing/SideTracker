@@ -2,10 +2,12 @@ package com.example.davidsavrda.sidetracker;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.StrictMode;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+
 import java.util.ArrayList;
 
 import android.widget.AdapterView;
@@ -18,20 +20,24 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
-public class MainActivity extends ActionBarActivity{
+public class MainActivity extends ActionBarActivity {
     private ArrayList<MedicationInfo> medications;
     private ListView medicationsList;
     String username;
     String URL = "http://localhost/medication";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // NOTE (LESWING) HACK to allow syncronous network IO
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         username = getIntent().getExtras().getString("Username");
         //Placeholder work so that we can make sure everything more or less works without FHIR and DB
         //This will be replaced with a look up to get all of the medications and their information for the person
         medications = new ArrayList<MedicationInfo>();
-        for(int i = 0; i < 5; i++){
+        for (int i = 0; i < 5; i++) {
             MedicationInfo newMed = new MedicationInfo();
             newMed.name = "Med" + i;
             newMed.detail = "These are just placeholders, this is for Med" + i;
@@ -48,7 +54,7 @@ public class MainActivity extends ActionBarActivity{
         //Now we get back to handling things that will actually be there
         medicationsList = (ListView) findViewById(R.id.medicationList);
         ArrayList<String> names = new ArrayList<String>();
-        for(MedicationInfo med: medications){
+        for (MedicationInfo med : medications) {
             names.add(med.name);
         }
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, names);
@@ -62,18 +68,16 @@ public class MainActivity extends ActionBarActivity{
                 intent.putExtra("Username", username);
                 try {
                     intent.putExtra("Medication", createMedicationInfoString(medications.get(position)).toString());
-                }
-                catch(JSONException e){
+                } catch (JSONException e) {
 
                 }
                 startActivity(intent);
-                }
-            });
-        }
+            }
+        });
+    }
 
 
-
-        @Override
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -95,12 +99,12 @@ public class MainActivity extends ActionBarActivity{
         return super.onOptionsItemSelected(item);
     }
 
-    public JSONObject createMedicationInfoString(MedicationInfo info) throws JSONException{
+    public JSONObject createMedicationInfoString(MedicationInfo info) throws JSONException {
         JSONObject infoToPass = new JSONObject();
         infoToPass.put("Name", info.name);
         infoToPass.put("Details", info.detail);
         JSONArray alarms = new JSONArray();
-        if(info.alarms.size() > 0) {
+        if (info.alarms.size() > 0) {
             for (AlarmInfo alarm : info.alarms) {
                 JSONObject jsonAlarm = new JSONObject();
                 jsonAlarm.put("Day", alarm.day);
@@ -110,7 +114,7 @@ public class MainActivity extends ActionBarActivity{
         }
 
         JSONArray sideEffects = new JSONArray();
-        if(info.sideEffects.size() > 0) {
+        if (info.sideEffects.size() > 0) {
             for (SideEffect side : info.sideEffects) {
                 JSONObject jsonSideEffect = new JSONObject();
                 jsonSideEffect.put("Name", side.name);

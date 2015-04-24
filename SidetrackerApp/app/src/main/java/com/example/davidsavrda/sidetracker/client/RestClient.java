@@ -1,7 +1,9 @@
 package com.example.davidsavrda.sidetracker.client;
 
+import com.example.davidsavrda.sidetracker.Medication;
 import com.example.davidsavrda.sidetracker.MedicationInfo;
 import com.example.davidsavrda.sidetracker.model.WsAppUser;
+import com.example.davidsavrda.sidetracker.model.WsMedication;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpRequest;
@@ -28,13 +30,13 @@ public class RestClient {
     private static final String MEDICATION_ENDPOINT = "/medication";
     private static final String LOGIN_ENDPOINT = "/login";
     private static final DefaultHttpClient client = new DefaultHttpClient();
-    private static String baseUrl = "http://localhost:8080";
+    private static String baseUrl = "http://localhost:8080/api";
     private static ObjectMapper objectMapper = new ObjectMapper();
     static {
     }
 
     public static void setUrl(final String url) {
-        baseUrl = baseUrl;
+        baseUrl = baseUrl + "/api";
     }
 
     public static void setAuth(final String userName, final String password) {
@@ -47,7 +49,7 @@ public class RestClient {
     public static boolean login() {
         try {
             final String myUrl = baseUrl + LOGIN_ENDPOINT;
-            final HttpGet get = new HttpGet();
+            final HttpGet get = new HttpGet(myUrl);
             setHeaders(get);
             final HttpResponse response = client.execute(get);
             return response.getStatusLine().getStatusCode() == 200;
@@ -59,6 +61,8 @@ public class RestClient {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (final RuntimeException e) {
+            e.printStackTrace();
         }
         return false;
     }
@@ -67,20 +71,36 @@ public class RestClient {
         throw new UnsupportedOperationException("Failure");
     }
 
-    public static List<MedicationInfo> updateMedication(final List<MedicationInfo> medicationInfos) {
+    public static List<WsMedication> getMedications() {
+        final String myUrl = baseUrl + MEDICATION_ENDPOINT;
+        final HttpGet get = new HttpGet(myUrl);
+        setHeaders(get);
+        return executeRequestForList(get, WsMedication.class);
+    }
+
+    public static List<WsMedication> updateMedication(final List<WsMedication> medicationInfos) {
         try {
             final String myUrl = baseUrl + MEDICATION_ENDPOINT;
             HttpPut put = new HttpPut(myUrl);
             setHeaders(put);
             final String entity = objectMapper.writeValueAsString(medicationInfos);
             put.setEntity(new StringEntity(entity));
-            return executeRequestForList(put, MedicationInfo.class);
+            return executeRequestForList(put, WsMedication.class);
         } catch (final JsonProcessingException e) {
             e.printStackTrace();
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private static <T> T executeRequestForObject(final HttpUriRequest request, final Class<T> clazz) {
+        try {
+            final HttpResponse response = client.execute(request);
+            return objectMapper.readValue(response.getEntity().getContent(), clazz);
+        } catch (IOException e) {
+            return null;
+        }
     }
 
     private static <T> List<T> executeRequestForList(final HttpUriRequest request, final Class<T> clazz) {

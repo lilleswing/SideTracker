@@ -89,6 +89,7 @@
             android:name=".AlarmAlert"
             android:label="@string/title_activity_alarm_alert" >
         </activity>
+        <uses-permission android:name="android.permission.INTERNET"/>
     </application>
 
 </manifest>

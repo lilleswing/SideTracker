@@ -13,7 +13,7 @@ import java.net.URL;
 
 @Singleton
 public class FhirClient {
-    private static final int TIMEOUT_SECONDS = 20;
+    private static final int TIMEOUT_SECONDS = 5;
     private static final String MEDICATION_PRESCRIPTION = "/MedicationPrescription?subject:Patient=";
     private String url;
 

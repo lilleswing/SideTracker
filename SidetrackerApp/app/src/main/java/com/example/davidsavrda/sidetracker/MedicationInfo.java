@@ -4,6 +4,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
 
+/**
+ * Replace with WsMedication
+ */
+@Deprecated
 public class MedicationInfo {
     @JsonProperty("name")
     String name;

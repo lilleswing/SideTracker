@@ -74,10 +74,16 @@ public class Login extends ActionBarActivity {
         String givenPassword = passwordEditText.getText().toString();
         RestClient.setAuth(givenUsername, givenPassword);
 
-        final boolean isLoggedIn = RestClient.login();
-        int i = 1;
+        final AsyncTask<Object, Void, Boolean> isLoggedIn = new AsyncTask<Object, Void, Boolean>() {
+            @Override
+            protected Boolean doInBackground(Object... params) {
+                return RestClient.login();
+            }
+        }.execute();
         // What the fuck am I supposed to do now?
         // Why is this a void?
+        // Should I switch the next view based on a class value?
+
 
         //String url = "http://localhost:8080/login?username=" + ((TextView) findViewById(R.id.username)).getText().toString() +
         //        "&password=" + ((TextView) findViewById(R.id.Password));

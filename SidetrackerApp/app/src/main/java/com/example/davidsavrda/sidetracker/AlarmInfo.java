@@ -1,8 +1,9 @@
 package com.example.davidsavrda.sidetracker;
 
 /**
- * Created by davidsavrda on 4/18/15.
+ * Replace with WsAlarm
  */
+@Deprecated
 public class AlarmInfo {
     String day;
     String time;

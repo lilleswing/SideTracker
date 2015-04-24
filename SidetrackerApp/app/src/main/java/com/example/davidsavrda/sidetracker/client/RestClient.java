@@ -1,6 +1,7 @@
 package com.example.davidsavrda.sidetracker.client;
 
 import com.example.davidsavrda.sidetracker.MedicationInfo;
+import com.example.davidsavrda.sidetracker.model.AppUser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
@@ -8,7 +9,9 @@ import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.StringEntity;
@@ -41,7 +44,29 @@ public class RestClient {
         credProvider.setCredentials(new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT),
                 new UsernamePasswordCredentials(userName, password));
         client.setCredentialsProvider(credProvider);
+    }
 
+    static boolean login() {
+        try {
+            final String myUrl = baseUrl + LOGIN_ENDPOINT;
+            final HttpGet get = new HttpGet();
+            setHeaders(get);
+            final HttpResponse response = client.execute(get);
+            return response.getStatusLine().getStatusCode() == 200;
+        } catch (final JsonProcessingException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    static AppUser updateFHIR(final MedicationInfo medicationInfo) {
+        throw new UnsupportedOperationException("Failure");
     }
 
     static MedicationInfo updateMedication(final MedicationInfo medicationInfo) {

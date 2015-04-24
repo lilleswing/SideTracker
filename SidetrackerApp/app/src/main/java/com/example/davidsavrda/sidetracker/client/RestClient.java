@@ -30,6 +30,7 @@ import java.util.List;
 public class RestClient {
     private static final String MEDICATION_ENDPOINT = "/medication";
     private static final String LOGIN_ENDPOINT = "/login";
+    private static final String USER_ENDPOINT = "/user";
     private static final DefaultHttpClient client = new DefaultHttpClient();
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -69,8 +70,20 @@ public class RestClient {
         return false;
     }
 
-    public static WsAppUser updateFHIR(final MedicationInfo medicationInfo) {
-        throw new UnsupportedOperationException("Failure");
+    public static WsAppUser updateFHIR(final WsAppUser wsAppUser) {
+        try {
+            final String myUrl = baseUrl + USER_ENDPOINT;
+            HttpPut put = new HttpPut(myUrl);
+            setHeaders(put);
+            final String entity = objectMapper.writeValueAsString(wsAppUser);
+            put.setEntity(new StringEntity(entity));
+            return executeRequestForObject(put, WsAppUser.class);
+        } catch (final JsonProcessingException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public static List<WsMedication> getMedications() {

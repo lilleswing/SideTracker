@@ -1,13 +1,14 @@
 package com.example.davidsavrda.sidetracker;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.ArrayList;
 
-/**
- * Created by davidsavrda on 4/18/15.
- */
 public class MedicationInfo {
+    @JsonProperty("name")
     String name;
     String detail;
+
     ArrayList<AlarmInfo> alarms;
     ArrayList<SideEffect> sideEffects;
 

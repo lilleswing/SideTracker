@@ -28,3 +28,9 @@ proguard/
 #
 # # Log Files
 *.log
+
+
+# Android Files
+SidetrackerApp/.idea/*
+SidetrackerApp/*.iml
+SidetrackerApp/app/*.iml

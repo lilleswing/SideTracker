@@ -7,6 +7,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.HttpHeaders;
 import javax.xml.bind.DatatypeConverter;
@@ -44,8 +45,8 @@ public class BasicAuthFilter implements Filter {
     public void doFilter(final ServletRequest servletRequest,
                          final ServletResponse servletResponse,
                          final FilterChain filterChain) throws IOException, ServletException {
-        if (servletRequest instanceof HttpServletRequest) {
-            getUserNameAndPassword((HttpServletRequest) servletRequest);
+        if (servletRequest instanceof HttpServletRequestWrapper) {
+            getUserNameAndPassword((HttpServletRequestWrapper) servletRequest);
         }
         if (requestStateProvider.get().getAppUser() != null) {
             filterChain.doFilter(servletRequest, servletResponse);
@@ -59,7 +60,7 @@ public class BasicAuthFilter implements Filter {
     public void destroy() {
     }
 
-    private void getUserNameAndPassword(final HttpServletRequest servletRequest) {
+    private void getUserNameAndPassword(final HttpServletRequestWrapper servletRequest) {
         final String auth = servletRequest.getHeader(HttpHeaders.AUTHORIZATION);
         if (auth == null) {
             return;

@@ -1,5 +1,6 @@
 package com.example.davidsavrda.sidetracker.client;
 
+import android.util.Base64;
 import com.example.davidsavrda.sidetracker.Medication;
 import com.example.davidsavrda.sidetracker.MedicationInfo;
 import com.example.davidsavrda.sidetracker.model.WsAppUser;
@@ -30,8 +31,11 @@ public class RestClient {
     private static final String MEDICATION_ENDPOINT = "/medication";
     private static final String LOGIN_ENDPOINT = "/login";
     private static final DefaultHttpClient client = new DefaultHttpClient();
-    private static String baseUrl = "http://localhost:8080/api";
-    private static ObjectMapper objectMapper = new ObjectMapper();
+    private static final ObjectMapper objectMapper = new ObjectMapper();
+
+    private static String baseUrl = "http://10.0.2.2:8080/api";
+    private static String userName = "martha";
+    private static String password = "password";
     static {
     }
 
@@ -40,10 +44,8 @@ public class RestClient {
     }
 
     public static void setAuth(final String userName, final String password) {
-        final CredentialsProvider credProvider = new BasicCredentialsProvider();
-        credProvider.setCredentials(new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT),
-                new UsernamePasswordCredentials(userName, password));
-        client.setCredentialsProvider(credProvider);
+        RestClient.userName = userName;
+        RestClient.password = password;
     }
 
     public static boolean login() {
@@ -117,5 +119,9 @@ public class RestClient {
     private static void setHeaders(final HttpRequest httpRequest) {
         httpRequest.setHeader("Content-Type", "application/json");
         httpRequest.setHeader("Accept", "application/json");
+        String authorizationString = "Basic " + Base64.encodeToString(
+                (userName + ":" + password).getBytes(),
+                Base64.NO_WRAP);
+        httpRequest.setHeader("Authorization", authorizationString);
     }
 }

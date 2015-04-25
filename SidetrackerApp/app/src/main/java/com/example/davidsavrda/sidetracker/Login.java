@@ -34,7 +34,7 @@ public class Login extends ActionBarActivity {
     private TextView usernameEditText;
     private TextView passwordEditText;
 
-    public final static String apiURL = "localhost:8080/login?";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,33 +80,9 @@ public class Login extends ActionBarActivity {
                 return RestClient.login();
             }
         }.execute();
-        // What the fuck am I supposed to do now?
-        // Why is this a void?
-        // Should I switch the next view based on a class value?
-
-
-        //String url = "http://localhost:8080/login?username=" + ((TextView) findViewById(R.id.username)).getText().toString() +
-        //        "&password=" + ((TextView) findViewById(R.id.Password));
-        //This occurs when the login was unssuccessful
-        //if(false) {
-        //
-        //}
-        //This occurs when the login was successful
-        //Intent intent = new Intent(context, MainActivity.class);
-        //intent.putExtra("Username", ((TextView) findViewById(R.id.username)).getText().toString());
-        //startActivity(intent);
-    }
-
-    private void connectWithHttpGet(String givenUsername, String givenPassword){
-        HttpClient client = new DefaultHttpClient();
-        String requestString = "http://localhost:8080/login?username=" + givenUsername + "&password=" + givenPassword;
-        HttpGet request = new HttpGet(requestString);
-        //HttpResponse httpResponse = client.execute(request);
-    }
-
-    public void signUpPressed(View v){
-        Context context = getApplicationContext();
-        Intent intent = new Intent(context, SignUp.class);
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.putExtra("Username", ((TextView) findViewById(R.id.username)).getText().toString());
+        intent.putExtra("Password", ((TextView) findViewById(R.id.Password)).getText().toString());
         startActivity(intent);
     }
 }

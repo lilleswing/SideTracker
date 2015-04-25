@@ -2,6 +2,7 @@ package com.example.davidsavrda.sidetracker;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.StrictMode;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -9,11 +10,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ArrayAdapter;
 import android.view.View;
+
+import com.example.davidsavrda.sidetracker.client.RestClient;
+import com.example.davidsavrda.sidetracker.model.WsAlarm;
+import com.example.davidsavrda.sidetracker.model.WsMedication;
+import com.example.davidsavrda.sidetracker.model.WsSideEffect;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,10 +28,10 @@ import org.json.JSONObject;
 
 
 public class MainActivity extends ActionBarActivity {
-    private ArrayList<MedicationInfo> medications;
+    private List<WsMedication> medications;
     private ListView medicationsList;
     String username;
-    String URL = "http://localhost/medication";
+    String password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,28 +41,24 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         username = getIntent().getExtras().getString("Username");
-        //Placeholder work so that we can make sure everything more or less works without FHIR and DB
-        //This will be replaced with a look up to get all of the medications and their information for the person
-        medications = new ArrayList<MedicationInfo>();
-        for (int i = 0; i < 5; i++) {
-            MedicationInfo newMed = new MedicationInfo();
-            newMed.name = "Med" + i;
-            newMed.detail = "These are just placeholders, this is for Med" + i;
-            AlarmInfo alarm = new AlarmInfo();
-            alarm.day = "Monday";
-            alarm.time = "9:00";
-            newMed.alarms.add(alarm);
-            SideEffect side = new SideEffect();
-            side.name = "Test Side Effect";
-            side.description = "Random Side effect for testing";
-            newMed.sideEffects.add(side);
-            medications.add(newMed);
-        }
+        password = getIntent().getExtras().getString("Password");
+
+        AsyncTask<Object, Void, List<WsMedication>> isLoggedIn = new AsyncTask<Object, Void, List<WsMedication>>() {
+            @Override
+            protected List<WsMedication> doInBackground(Object... params) {
+                return RestClient.getMedications();
+            }
+
+            @Override
+            protected void onPostExecute(List<WsMedication> result) {
+                medications = result;
+            }
+        }.execute();
         //Now we get back to handling things that will actually be there
         medicationsList = (ListView) findViewById(R.id.medicationList);
         ArrayList<String> names = new ArrayList<String>();
-        for (MedicationInfo med : medications) {
-            names.add(med.name);
+        for (WsMedication med : medications) {
+            names.add(med.getName());
         }
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, names);
         medicationsList.setAdapter(arrayAdapter);
@@ -66,11 +69,23 @@ public class MainActivity extends ActionBarActivity {
                 Context context = getApplicationContext();
                 Intent intent = new Intent(context, Medication.class);
                 intent.putExtra("Username", username);
-                try {
-                    intent.putExtra("Medication", createMedicationInfoString(medications.get(position)).toString());
-                } catch (JSONException e) {
-
+                intent.putExtra("Password", password);
+                intent.putExtra("Medication", (medications.get(position)).getName());
+                List<WsSideEffect> sideEffects = medications.get(position).getSideEffects();
+                List<WsAlarm> alarms = medications.get(position).getAlarms();
+                ArrayList<String> sideEffectsDesc = new ArrayList<String>();
+                for(WsSideEffect side : sideEffects){
+                    sideEffectsDesc.add(side.getDescription());
                 }
+                intent.putExtra("SideEffects", sideEffectsDesc.toString());
+                ArrayList<String> days = new ArrayList<String>();
+                ArrayList<String> times = new ArrayList<String>();
+                for(WsAlarm alarm: alarms){
+                    days.add(alarm.getDay());
+                    times.add(alarm.getTime());
+                }
+                intent.putExtra("Days", days.toString());
+                intent.putExtra("Time", times.toString());
                 startActivity(intent);
             }
         });
@@ -98,34 +113,4 @@ public class MainActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
-    public JSONObject createMedicationInfoString(MedicationInfo info) throws JSONException {
-        JSONObject infoToPass = new JSONObject();
-        infoToPass.put("Name", info.name);
-        infoToPass.put("Details", info.detail);
-        JSONArray alarms = new JSONArray();
-        if (info.alarms.size() > 0) {
-            for (AlarmInfo alarm : info.alarms) {
-                JSONObject jsonAlarm = new JSONObject();
-                jsonAlarm.put("Day", alarm.day);
-                jsonAlarm.put("Time", alarm.time);
-                alarms.put(jsonAlarm);
-            }
-        }
-
-        JSONArray sideEffects = new JSONArray();
-        if (info.sideEffects.size() > 0) {
-            for (SideEffect side : info.sideEffects) {
-                JSONObject jsonSideEffect = new JSONObject();
-                jsonSideEffect.put("Name", side.name);
-                jsonSideEffect.put("Description", side.description);
-                sideEffects.put(jsonSideEffect);
-            }
-        }
-        infoToPass.put("SideEffects", sideEffects);
-        infoToPass.put("Alarms", alarms);
-        return infoToPass;
-    }
-
-
 }

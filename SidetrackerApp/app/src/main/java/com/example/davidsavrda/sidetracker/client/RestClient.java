@@ -3,6 +3,7 @@ package com.example.davidsavrda.sidetracker.client;
 import android.util.Base64;
 import com.example.davidsavrda.sidetracker.model.WsAppUser;
 import com.example.davidsavrda.sidetracker.model.WsMedication;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpRequest;

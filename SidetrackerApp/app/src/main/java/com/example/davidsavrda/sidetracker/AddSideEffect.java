@@ -2,6 +2,7 @@ package com.example.davidsavrda.sidetracker;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -10,9 +11,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
+import com.example.davidsavrda.sidetracker.client.RestClient;
+import com.example.davidsavrda.sidetracker.model.WsMedication;
+import com.example.davidsavrda.sidetracker.model.WsSideEffect;
+
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class AddSideEffect extends ActionBarActivity {
-
+    String medicationName;
+    String Username;
+    String Password;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,8 +55,26 @@ public class AddSideEffect extends ActionBarActivity {
     }
 
     public void addSideEffect(View v){
-        SideEffect newSideEffect = new SideEffect(((EditText) findViewById(R.id.Name)).getText().toString(),
-                ((EditText) findViewById(R.id.Description)).getText().toString());
+        final WsSideEffect newSideEffect = new WsSideEffect();
+        newSideEffect.setDescription(((EditText) findViewById(R.id.Description)).getText().toString());
+        AsyncTask<Object, Void, List<WsMedication>> isLoggedIn = new AsyncTask<Object, Void, List<WsMedication>>() {
+            @Override
+            protected List<WsMedication> doInBackground(Object... params) {
+                WsMedication newMed = new WsMedication();
+                newMed.setName(medicationName);
+                ArrayList<WsSideEffect> sideEffects = new ArrayList<WsSideEffect>();
+                sideEffects.add(newSideEffect);
+                newMed.setSideEffects(sideEffects);
+                List<WsMedication> medForCall = new ArrayList<WsMedication>();
+                medForCall.add(newMed);
+                return RestClient.updateMedication(medForCall);
+            }
+
+            @Override
+            protected void onPostExecute(List<WsMedication> result) {
+
+            }
+        }.execute();
         Context context = getApplicationContext();
         Intent intent = new Intent(context, SideEffects.class);
         startActivity(intent);

@@ -18,16 +18,22 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 
 public class Medication extends ActionBarActivity {
 
-    public MedicationInfo med;
+
     public ListView alarms;
     public TextView title;
     public TextView details;
     String username;
-    JSONObject medicationInfo;
+    String password;
+    String name;
+    List<String> sideEffects;
+    List<String> alarmDays;
+    List<String> alarmTime;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,54 +41,23 @@ public class Medication extends ActionBarActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         username = getIntent().getExtras().getString("Username");
-        String medicationString = getIntent().getExtras().getString("Medication");
-        try {
-            medicationInfo = new JSONObject(medicationString);
-        }
-        catch(JSONException e){
+        password = getIntent().getExtras().getString("Password");
+        name = getIntent().getExtras().getString("Medication");
+        sideEffects = Arrays.asList(getIntent().getExtras().getString("SideEffects").split(","));
+        alarmDays = Arrays.asList(getIntent().getExtras().getString("Days").split(","));
+        alarmTime = Arrays.asList(getIntent().getExtras().getString("Times").split(","));
 
-        }
-        med = new MedicationInfo();
-        try {
-            med.name = medicationInfo.getString("Name");
-            med.detail = medicationInfo.getString("Details");
-            JSONArray alarms = medicationInfo.getJSONArray("Alarms");
-            for(int index = 0; index < alarms.length(); index++){
-                JSONObject JSONalarm = alarms.getJSONObject(index);
-                String alarmDay = JSONalarm.getString("Day");
-                String alarmTime = JSONalarm.getString("Time");
-                AlarmInfo info = new AlarmInfo();
-                info.day = alarmDay;
-                info.time = alarmTime;
-                med.alarms.add(info);
-            }
-            JSONArray sideEffects = medicationInfo.getJSONArray("SideEffects");
-            for(int index = 0; index < sideEffects.length(); index++){
-                JSONObject JSONsideEffect = sideEffects.getJSONObject(index);
-                String name = JSONsideEffect.getString("Name");
-                String description = JSONsideEffect.getString("Description");
-                SideEffect side = new SideEffect();
-                side.name = name;
-                side.description = description;
-                med.sideEffects.add(side);
-            }
-
-
-        }
-        catch(JSONException e){
-
-        }
         title = (TextView) findViewById(R.id.Title);
-        title.setText(med.name);
+        title.setText(name);
         details = (TextView) findViewById(R.id.textView6);
-        details.setText(med.detail);
+        details.setText("");
         alarms = (ListView) findViewById(R.id.AlarmListView);
-        ArrayList<String> times = new ArrayList<String>();
-        for(AlarmInfo alarmInfo : med.alarms){
-            times.add("Day:" + alarmInfo.day + " Time:" + alarmInfo.time);
+        ArrayList<String> alarmInfos = new ArrayList<String>();
+        for(int index = 0; index < alarmDays.size(); index++){
+            alarmInfos.add("Day: " + alarmDays.get(index) + " Time: " + alarmTime.get(index));
         }
 
-        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, times);
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, alarmInfos);
         alarms.setAdapter(arrayAdapter);
         alarms.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
@@ -120,35 +95,27 @@ public class Medication extends ActionBarActivity {
     public void viewSideEffect(View v){
         Context context = getApplicationContext();
         Intent intent = new Intent(context, SideEffects.class);
-        intent.putExtra("Medication", med.name);
+        intent.putExtra("Medication", name);
+        intent.putExtra("Password", password);
         intent.putExtra("Username", username);
-        try {
-            intent.putExtra("SideEffects", getSideEffects().toString());
-        }
-        catch (JSONException e){
+        intent.putExtra("SideEffects", sideEffects.toString());
+        intent.putExtra("Times", alarmTime.toString());
+        intent.putExtra("Days", alarmDays.toString());
 
-        }
         startActivity(intent);
     }
 
     public void addAlarm(View v){
         Context context = getApplicationContext();
         Intent intent = new Intent(context, Alarm.class);
-        intent.putExtra("Medication", med.name);
+        intent.putExtra("Medication", name);
         intent.putExtra("Username", username);
+        intent.putExtra("Password", password);
+        intent.putExtra("Days", alarmDays.toString());
+        intent.putExtra("Times", alarmTime.toString());
+        intent.putExtra("SideEffects", sideEffects.toString());
         startActivity(intent);
     }
 
-    public JSONObject getSideEffects() throws JSONException{
-        JSONObject infoToPass = new JSONObject();
-        JSONArray effects = new JSONArray();
-        for(SideEffect sides : med.sideEffects){
-            JSONObject side = new JSONObject();
-            side.put("Name", sides.name);
-            side.put("Description", sides.description);
-            effects.put(side);
-        }
-        infoToPass.put("SideEffects", effects);
-        return infoToPass;
-    }
+
 }

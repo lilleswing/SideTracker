@@ -19,6 +19,7 @@ import edu.gtech.sidetracker.web.dao.DaoProvider;
 import edu.gtech.sidetracker.web.dao.SideEffectDao;
 import edu.gtech.sidetracker.web.dao.UserMedicationDao;
 import edu.gtech.sidetracker.web.guice.RequestState;
+import edu.gtech.sidetracker.web.guice.aop.auth.Authorize;
 import edu.gtech.sidetracker.web.model.Alarm;
 import edu.gtech.sidetracker.web.model.SideEffect;
 import edu.gtech.sidetracker.web.model.UserMedication;
@@ -50,6 +51,7 @@ public class MedicationService {
 
     @GET
     @Produces(APPLICATION_JSON)
+    @Authorize
     public List<WsMedication> getMedication() {
         final List<UserMedication> medicationList = userMedicationDao.getForUser();
         final List<WsMedication> retval = new ArrayList<>(medicationList.size());
@@ -61,6 +63,7 @@ public class MedicationService {
 
     @PUT
     @Produces(APPLICATION_JSON)
+    @Authorize
     public List<WsMedication> updateMedications(final List<WsMedication> wsMedications) {
         final List<WsMedication> retval = new ArrayList<>(wsMedications.size());
         for (final WsMedication wsMedication: wsMedications) {

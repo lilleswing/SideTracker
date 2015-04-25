@@ -48,30 +48,11 @@ public class BasicAuthFilter implements Filter {
         if (servletRequest instanceof HttpServletRequestWrapper) {
             getUserNameAndPassword((HttpServletRequestWrapper) servletRequest);
         }
-        if (isAuthed((HttpServletRequestWrapper) servletRequest)) {
-            filterChain.doFilter(servletRequest, servletResponse);
-        } else if (servletResponse instanceof HttpServletResponse) {
-            final HttpServletResponse httpResponse  = (HttpServletResponse) servletResponse;
-            httpResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
-        }
+        filterChain.doFilter(servletRequest, servletResponse);
     }
 
     @Override
     public void destroy() {
-    }
-
-    /**
-     * NOTE (LESWING) HACK TO allow POST /user
-     * @param httpServletRequest
-     * @return
-     */
-    private boolean isAuthed(final HttpServletRequestWrapper httpServletRequest) {
-        final String url = httpServletRequest.getRequestURI().toString();
-        final String method = httpServletRequest.getMethod();
-        if ("/api/user".equals(url) && "POST".equals(method)) {
-            return true;
-        }
-        return requestStateProvider.get().getAppUser() != null;
     }
 
     private void getUserNameAndPassword(final HttpServletRequestWrapper servletRequest) {

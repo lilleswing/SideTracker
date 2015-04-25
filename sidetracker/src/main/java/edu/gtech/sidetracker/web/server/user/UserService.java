@@ -12,6 +12,7 @@ import edu.gtech.sidetracker.web.dao.AppUserDao;
 import edu.gtech.sidetracker.web.dao.DaoProvider;
 import edu.gtech.sidetracker.web.fhir.PatientUpdater;
 import edu.gtech.sidetracker.web.guice.RequestState;
+import edu.gtech.sidetracker.web.guice.aop.auth.Authorize;
 import edu.gtech.sidetracker.web.model.AppUser;
 import edu.gtech.sidetracker.web.server.user.model.WsAppUser;
 
@@ -33,6 +34,7 @@ public class UserService {
     }
 
     @GET
+    @Authorize
     public WsAppUser getAppUser() {
         final RequestState requestState = requestStateProvider.get();
         final AppUser appUser = requestState.getAppUser();
@@ -40,6 +42,17 @@ public class UserService {
         wsAppUser.setUserName(appUser.getUsername());
         wsAppUser.setId(appUser.getId());
         wsAppUser.setFhirId(appUser.getFhirId());
+        return wsAppUser;
+    }
+
+    @PUT
+    @Authorize
+    public WsAppUser updateAppUser(final WsAppUser wsAppUser) {
+        final RequestState requestState = requestStateProvider.get();
+        final AppUser appUser = requestState.getAppUser();
+        appUser.setFhirId(wsAppUser.getFhirId());
+        appUserDao.update(appUser);
+        patientUpdater.update(appUser);
         return wsAppUser;
     }
 
@@ -55,15 +68,5 @@ public class UserService {
         returnWs.setUserName(returned.getUsername());
         returnWs.setFhirId(returned.getFhirId());
         return returnWs;
-    }
-
-    @PUT
-    public WsAppUser updateAppUser(final WsAppUser wsAppUser) {
-        final RequestState requestState = requestStateProvider.get();
-        final AppUser appUser = requestState.getAppUser();
-        appUser.setFhirId(wsAppUser.getFhirId());
-        appUserDao.update(appUser);
-        patientUpdater.update(appUser);
-        return wsAppUser;
     }
 }

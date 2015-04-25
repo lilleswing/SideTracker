@@ -8,6 +8,7 @@ import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import edu.gtech.sidetracker.web.fhir.PatientUpdater;
 import edu.gtech.sidetracker.web.guice.RequestState;
+import edu.gtech.sidetracker.web.guice.aop.auth.Authorize;
 
 @Path("/login")
 @Singleton
@@ -24,6 +25,7 @@ public class LoginService {
     }
 
     @GET
+    @Authorize
     public String login() {
         patientUpdater.update(requestStateProvider.get().getAppUser());
         return "Logged In";

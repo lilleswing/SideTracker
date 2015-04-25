@@ -1,23 +1,18 @@
 package com.example.davidsavrda.sidetracker.client;
 
 import android.util.Base64;
-import com.example.davidsavrda.sidetracker.Medication;
-import com.example.davidsavrda.sidetracker.MedicationInfo;
 import com.example.davidsavrda.sidetracker.model.WsAppUser;
 import com.example.davidsavrda.sidetracker.model.WsMedication;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.io.IOException;
@@ -33,6 +28,7 @@ public class RestClient {
     private static final String USER_ENDPOINT = "/user";
     private static final DefaultHttpClient client = new DefaultHttpClient();
     private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final String AUTHORIZATION_HEADER = "Authorization";
 
     private static String baseUrl = "http://10.0.2.2:8080/api";
     private static String userName = "martha";
@@ -70,7 +66,14 @@ public class RestClient {
         return false;
     }
 
-    public static WsAppUser updateFHIR(final WsAppUser wsAppUser) {
+    public static WsAppUser getUser() {
+        final String myUrl = baseUrl + USER_ENDPOINT;
+        final HttpGet get = new HttpGet(myUrl);
+        setHeaders(get);
+        return executeRequestForObject(get, WsAppUser.class);
+    }
+
+    public static WsAppUser updateUser(final WsAppUser wsAppUser) {
         try {
             final String myUrl = baseUrl + USER_ENDPOINT;
             HttpPut put = new HttpPut(myUrl);
@@ -78,6 +81,23 @@ public class RestClient {
             final String entity = objectMapper.writeValueAsString(wsAppUser);
             put.setEntity(new StringEntity(entity));
             return executeRequestForObject(put, WsAppUser.class);
+        } catch (final JsonProcessingException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static WsAppUser createUser(final WsAppUser wsAppUser) {
+        try {
+            final String myUrl = baseUrl + USER_ENDPOINT;
+            final HttpPost post = new HttpPost(myUrl);
+            setHeaders(post);
+            post.removeHeaders(AUTHORIZATION_HEADER);
+            final String entity = objectMapper.writeValueAsString(wsAppUser);
+            post.setEntity(new StringEntity(entity));
+            return executeRequestForObject(post, WsAppUser.class);
         } catch (final JsonProcessingException e) {
             e.printStackTrace();
         } catch (UnsupportedEncodingException e) {
@@ -135,6 +155,6 @@ public class RestClient {
         String authorizationString = "Basic " + Base64.encodeToString(
                 (userName + ":" + password).getBytes(),
                 Base64.NO_WRAP);
-        httpRequest.setHeader("Authorization", authorizationString);
+        httpRequest.setHeader(AUTHORIZATION_HEADER, authorizationString);
     }
 }

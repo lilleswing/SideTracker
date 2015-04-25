@@ -8,6 +8,7 @@ import edu.gtech.sidetracker.web.model.AppUser;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 
 @Singleton
@@ -32,7 +33,12 @@ public class AppUserDao implements Dao<AppUser> {
 
     @Override
     public AppUser add(final AppUser appUser) {
-        throw new UnsupportedOperationException("Not implemented");
+        final Session session = sessionFactory.openSession();
+        final Transaction transaction = session.beginTransaction();
+        session.save(appUser);
+        transaction.commit();
+        session.close();
+        return getById(appUser.getId());
     }
 
     public AppUser getByNamePassword(final String username, final String password) {

@@ -1,6 +1,7 @@
 package edu.gtech.sidetracker.web.server.user;
 
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 
@@ -36,8 +37,24 @@ public class UserService {
         final RequestState requestState = requestStateProvider.get();
         final AppUser appUser = requestState.getAppUser();
         final WsAppUser wsAppUser = new WsAppUser();
+        wsAppUser.setUserName(appUser.getUsername());
+        wsAppUser.setId(appUser.getId());
         wsAppUser.setFhirId(appUser.getFhirId());
         return wsAppUser;
+    }
+
+    @POST
+    public WsAppUser createAppUser(final WsAppUser wsAppUser) {
+        final AppUser appUser = new AppUser();
+        appUser.setPassword(wsAppUser.getPassword());
+        appUser.setFhirId(wsAppUser.getFhirId());
+        appUser.setUsername(wsAppUser.getUserName());
+        final AppUser returned = appUserDao.add(appUser);
+        final WsAppUser returnWs = new WsAppUser();
+        returnWs.setId(returned.getId());
+        returnWs.setUserName(returned.getUsername());
+        returnWs.setFhirId(returned.getFhirId());
+        return returnWs;
     }
 
     @PUT

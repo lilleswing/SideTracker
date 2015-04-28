@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.example.davidsavrda.sidetracker.client.RestClient;
 import com.example.davidsavrda.sidetracker.model.WsAlarm;
@@ -108,19 +109,51 @@ public class AddSideEffect extends ActionBarActivity {
     }
 
     public void addSideEffect(View v) throws InterruptedException, ExecutionException{
-        final WsSideEffect newSideEffect = new WsSideEffect();
-        newSideEffect.setDescription(((EditText) findViewById(R.id.Description)).getText().toString());
+
         AsyncTask<Object, Void, List<WsMedication>> isLoggedIn = new AsyncTask<Object, Void, List<WsMedication>>() {
             @Override
             protected List<WsMedication> doInBackground(Object... params) {
-                WsMedication newMed = new WsMedication();
-                newMed.setName(medicationName);
-                ArrayList<WsSideEffect> sideEffects = new ArrayList<WsSideEffect>();
-                sideEffects.add(newSideEffect);
-                newMed.setSideEffects(sideEffects);
-                List<WsMedication> medForCall = new ArrayList<WsMedication>();
-                medForCall.add(newMed);
-                return RestClient.updateMedication(medForCall);
+
+                List<WsMedication> medicationCall = new ArrayList<WsMedication>();
+                for(int index = 0; index < numberOfMeds; index++){
+                    WsMedication newMed = new WsMedication();
+                    newMed.setName(name);
+                    newMed.setId(medID);
+                    List<WsAlarm> alarms = new ArrayList<WsAlarm>();
+                    ArrayList<String> days = alarmDays.get(position);
+                    ArrayList<String> times = alarmTime.get(position);
+                    ArrayList<String> ids = alarmIDs.get(position);
+                    for(int alarmIndex = 0; alarmIndex < days.size(); alarmIndex++){
+                        WsAlarm newalarm = new WsAlarm();
+                        newalarm.setDay(days.get(alarmIndex));
+                        newalarm.setTime(times.get(alarmIndex));
+                        newalarm.setId(Long.getLong(ids.get(alarmIndex)));
+                        alarms.add(newalarm);
+                    }
+
+                    ArrayList<String> desc = sideEffectsDesc.get(position);
+                    ArrayList<String> sideID = sideEffectID.get(position);
+                    List<WsSideEffect> sides = new ArrayList<WsSideEffect>();
+                    for(int sideIndex =0; sideIndex < sideEffectsDesc.size(); sideIndex++){
+                        WsSideEffect newEffect = new WsSideEffect();
+                        newEffect.setDescription(desc.get(sideIndex));
+                        newEffect.setId(Long.getLong(sideID.get(sideIndex)));
+                        sides.add(newEffect);
+
+                    }
+                    if(position == index){
+                        WsSideEffect newEffect = new WsSideEffect();
+                        newEffect.setDescription(((TextView) findViewById(R.id.Description)).getText().toString());
+                        sides.add(newEffect);
+                    }
+                    newMed.setAlarms(alarms);
+                    newMed.setSideEffects(sides);
+                    medicationCall.add(newMed);
+                }
+
+
+
+                return RestClient.updateMedication(medicationCall);
             }
         };
         Context context = getApplicationContext();

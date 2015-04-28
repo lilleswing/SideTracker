@@ -12,11 +12,13 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.example.davidsavrda.sidetracker.client.RestClient;
+import com.example.davidsavrda.sidetracker.model.WsAlarm;
 import com.example.davidsavrda.sidetracker.model.WsMedication;
 import com.example.davidsavrda.sidetracker.model.WsSideEffect;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 
 public class AddSideEffect extends ActionBarActivity {
@@ -29,6 +31,10 @@ public class AddSideEffect extends ActionBarActivity {
         setContentView(R.layout.activity_add_side_effect);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+        Username = getIntent().getExtras().get("Username").toString();
+        Password = getIntent().getExtras().get("Password").toString();
+        medicationName = getIntent().getExtras().getString("Medication").toString();
+
     }
 
 
@@ -54,7 +60,7 @@ public class AddSideEffect extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void addSideEffect(View v){
+    public void addSideEffect(View v) throws InterruptedException, ExecutionException{
         final WsSideEffect newSideEffect = new WsSideEffect();
         newSideEffect.setDescription(((EditText) findViewById(R.id.Description)).getText().toString());
         AsyncTask<Object, Void, List<WsMedication>> isLoggedIn = new AsyncTask<Object, Void, List<WsMedication>>() {
@@ -69,14 +75,32 @@ public class AddSideEffect extends ActionBarActivity {
                 medForCall.add(newMed);
                 return RestClient.updateMedication(medForCall);
             }
-
-            @Override
-            protected void onPostExecute(List<WsMedication> result) {
-
-            }
-        }.execute();
+        };
         Context context = getApplicationContext();
         Intent intent = new Intent(context, SideEffects.class);
+        List<WsMedication> updatedMed = isLoggedIn.execute().get();
+
+        WsMedication med = updatedMed.get(0);
+
+
+        intent.putExtra("Username", Username);
+        intent.putExtra("Password", Password);
+        intent.putExtra("Medication", med.getName());
+        List<WsAlarm> alarms = med.getAlarms();
+        List<WsSideEffect> sides = med.getSideEffects();
+        ArrayList<String> days = new ArrayList<String>();
+        ArrayList<String> times = new ArrayList<String>();
+        ArrayList<String> names = new ArrayList<String>();
+        for(int index = 0; index < alarms.size(); index++){
+            days.add(alarms.get(index).getDay());
+            times.add(alarms.get(index).getTime());
+        }
+        for(int index = 0; index < sides.size(); index++){
+            names.add(sides.get(index).getDescription());
+        }
+        intent.putExtra("SideEffects", sides.toString());
+        intent.putExtra("Days", days.toString());
+        intent.putExtra("Times", times.toString());
         startActivity(intent);
     }
 }

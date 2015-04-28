@@ -55,7 +55,7 @@ public class SignUp extends ActionBarActivity {
     public void signUpPressed(View v) throws ExecutionException, InterruptedException{
         Context context = getApplicationContext();
         final WsAppUser newUser = new WsAppUser();
-        newUser.setUserName(((TextView) findViewById(R.id.username)).getText().toString());
+        newUser.setUserName(((TextView) findViewById(R.id.Username)).getText().toString());
         newUser.setPassword(((TextView) findViewById(R.id.Password)).getText().toString());
         newUser.setFhirId(((TextView) findViewById(R.id.Id)).getText().toString());
 
@@ -69,6 +69,7 @@ public class SignUp extends ActionBarActivity {
         };
         user = isLoggedIn.execute().get();
         if(user == null) {
+            ((TextView) findViewById(R.id.Name)).setText("");
             ((TextView) findViewById(R.id.Username)).setText("");
             ((TextView) findViewById(R.id.Password)).setText("");
             ((TextView) findViewById(R.id.confirmPassword)).setText("");

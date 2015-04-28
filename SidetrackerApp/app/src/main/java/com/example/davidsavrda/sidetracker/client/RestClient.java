@@ -81,13 +81,16 @@ public class RestClient {
     }
 
     public static WsAppUser updateUser(final WsAppUser wsAppUser) {
+
         try {
             final String myUrl = baseUrl + USER_ENDPOINT;
             HttpPut put = new HttpPut(myUrl);
             setHeaders(put);
             final String entity = objectMapper.writeValueAsString(wsAppUser);
             put.setEntity(new StringEntity(entity));
-            return executeRequestForObject(put, WsAppUser.class);
+            WsAppUser response = executeRequestForObject(put, WsAppUser.class);
+
+            return response;
         } catch (final JsonProcessingException e) {
             e.printStackTrace();
         } catch (UnsupportedEncodingException e) {
@@ -104,12 +107,15 @@ public class RestClient {
             post.removeHeaders(AUTHORIZATION_HEADER);
             final String entity = objectMapper.writeValueAsString(wsAppUser);
             post.setEntity(new StringEntity(entity));
-            return executeRequestForObject(post, WsAppUser.class);
+            WsAppUser response = executeRequestForObject(post, WsAppUser.class);
+            Log.w("Sign Up Response", response.toString());
+            return response;
         } catch (final JsonProcessingException e) {
             e.printStackTrace();
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
+        Log.w("Log", "Not hitting first return");
         return null;
     }
 

@@ -11,28 +11,17 @@ import android.content.Context;
 import android.widget.TextView;
 
 import com.example.davidsavrda.sidetracker.client.RestClient;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONObject;
+import com.example.davidsavrda.sidetracker.model.WsAppUser;
 
-import java.io.BufferedReader;
-import java.io.IOError;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.net.URI;
-import java.net.URISyntaxException;
+import android.util.Log;
+
+import java.util.concurrent.ExecutionException;
 
 
 public class Login extends ActionBarActivity {
     private TextView usernameEditText;
     private TextView passwordEditText;
+    private Boolean login;
 
 
     @Override
@@ -67,7 +56,7 @@ public class Login extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void loginClicked(View v){
+    public void loginClicked(View v) throws ExecutionException, InterruptedException{
         Context context = getApplicationContext();
 
         String givenUsername = usernameEditText.getText().toString();
@@ -77,12 +66,32 @@ public class Login extends ActionBarActivity {
         final AsyncTask<Object, Void, Boolean> isLoggedIn = new AsyncTask<Object, Void, Boolean>() {
             @Override
             protected Boolean doInBackground(Object... params) {
-                return RestClient.login();
+                Boolean result = RestClient.login();
+                Log.w("Result", result.toString());
+                return result;
             }
-        }.execute();
+            @Override
+            protected void onPostExecute(Boolean result) {
+                login = result;
+            }
+        };
+        login = isLoggedIn.execute().get();
         Intent intent = new Intent(context, MainActivity.class);
-        intent.putExtra("Username", ((TextView) findViewById(R.id.username)).getText().toString());
-        intent.putExtra("Password", ((TextView) findViewById(R.id.Password)).getText().toString());
+        Log.w("Sidetracker", login.toString());
+        if(login) {
+            intent.putExtra("Username", ((TextView) findViewById(R.id.username)).getText().toString());
+            intent.putExtra("Password", ((TextView) findViewById(R.id.Password)).getText().toString());
+            startActivity(intent);
+        }
+        else{
+            ((TextView) findViewById(R.id.username)).setText("Error Logging in");
+            ((TextView) findViewById(R.id.Password)).setText("");
+        }
+    }
+
+    public void signUpPressed(View v){
+        Context context = getApplicationContext();
+        Intent intent = new Intent(context, SignUp.class);
         startActivity(intent);
     }
 }

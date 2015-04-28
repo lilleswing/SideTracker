@@ -22,33 +22,33 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
-        android:text="Name"
         android:ems="10"
         android:id="@+id/Name"
         android:layout_below="@+id/textView2"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:hint="Name" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
-        android:text="Username"
         android:ems="10"
         android:id="@+id/Username"
         android:layout_marginTop="29dp"
         android:layout_below="@+id/Name"
-        android:layout_alignStart="@+id/Name" />
+        android:layout_alignStart="@+id/Name"
+        android:hint="Username" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
-        android:text="Password"
         android:ems="10"
         android:id="@+id/Password"
         android:layout_marginTop="31dp"
         android:layout_below="@+id/Username"
-        android:layout_alignStart="@+id/Username" />
+        android:layout_alignStart="@+id/Username"
+        android:hint="Password" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -59,18 +59,19 @@
         android:layout_marginTop="29dp"
         android:layout_below="@+id/Password"
         android:layout_alignStart="@+id/Password"
-        android:text="Confirm Password" />
+        android:hint="Confirm Password" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
-        android:text="Patient Id"
         android:ems="10"
         android:id="@+id/Id"
         android:layout_marginTop="29dp"
         android:layout_below="@+id/confirmPassword"
-        android:layout_alignStart="@+id/confirmPassword" />
+        android:layout_alignStart="@+id/confirmPassword"
+        android:hint="Patient ID"
+        android:selectAllOnFocus="true" />
 
     <Button
         android:layout_width="wrap_content"

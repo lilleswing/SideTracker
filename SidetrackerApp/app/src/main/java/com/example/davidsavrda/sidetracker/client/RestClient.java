@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
+import android.util.Log;
+
 /**
  * NOTE (LESWING) would prefer eager singleton with DI over static
  */
@@ -32,6 +34,7 @@ public class RestClient {
     private static final String AUTHORIZATION_HEADER = "Authorization";
 
     private static String baseUrl = "http://10.0.2.2:8080/api";
+
     private static String userName = "martha";
     private static String password = "password";
     static {
@@ -50,8 +53,10 @@ public class RestClient {
         try {
             final String myUrl = baseUrl + LOGIN_ENDPOINT;
             final HttpGet get = new HttpGet(myUrl);
+            Log.w("Credintials", "U: " + userName + " P: " + password);
             setHeaders(get);
             final HttpResponse response = client.execute(get);
+            Log.w("Response", response.getStatusLine().toString());
             return response.getStatusLine().getStatusCode() == 200;
         } catch (final JsonProcessingException e) {
             e.printStackTrace();
@@ -64,6 +69,7 @@ public class RestClient {
         } catch (final RuntimeException e) {
             e.printStackTrace();
         }
+
         return false;
     }
 

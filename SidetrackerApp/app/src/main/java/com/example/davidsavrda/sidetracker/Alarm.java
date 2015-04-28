@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 
 public class Alarm extends ActionBarActivity {
@@ -88,8 +89,9 @@ public class Alarm extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void addAlarm(View v){
+    public void addAlarm(View v) throws InterruptedException, ExecutionException{
         Context context = getApplicationContext();
+        newAlarm = new ArrayList<WsAlarm>();
         int hour = time.getCurrentHour();
         int minute = time.getCurrentMinute();
         String alarmTime = hour + ":" + minute;
@@ -379,13 +381,29 @@ public class Alarm extends ActionBarActivity {
                 medForCall.add(newMed);
                 return RestClient.updateMedication(medForCall);
             }
+        };
+        List<WsMedication> updatedMed = isLoggedIn.execute().get();
+        WsMedication med = updatedMed.get(0);
 
-            @Override
-            protected void onPostExecute(List<WsMedication> result) {
-
-            }
-        }.execute();
         Intent intent = new Intent(context, Medication.class);
+        intent.putExtra("Username", username);
+        intent.putExtra("Password", password);
+        intent.putExtra("Medication", med.getName());
+        List<WsAlarm> alarms = med.getAlarms();
+        List<WsSideEffect> sides = med.getSideEffects();
+        ArrayList<String> days = new ArrayList<String>();
+        ArrayList<String> times = new ArrayList<String>();
+        ArrayList<String> names = new ArrayList<String>();
+        for(int index = 0; index < alarms.size(); index++){
+            days.add(alarms.get(index).getDay());
+            times.add(alarms.get(index).getTime());
+        }
+        for(int index = 0; index < sides.size(); index++){
+            names.add(sides.get(index).getDescription());
+        }
+        intent.putExtra("SideEffects", sides.toString());
+        intent.putExtra("Days", days.toString());
+        intent.putExtra("Times", times.toString());
         startActivity(intent);
     }
 }

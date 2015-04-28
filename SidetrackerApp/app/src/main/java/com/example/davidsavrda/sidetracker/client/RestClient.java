@@ -33,7 +33,7 @@ public class RestClient {
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private static final String AUTHORIZATION_HEADER = "Authorization";
 
-    private static String baseUrl = "http://10.0.2.2:8080/api";
+    private static String baseUrl = "http://10.0.2.2:8080/sidetracker/api";
 
     private static String userName = "martha";
     private static String password = "password";

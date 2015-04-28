@@ -11,6 +11,7 @@ import android.view.MenuItem;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -34,7 +35,7 @@ public class MainActivity extends ActionBarActivity {
     String password;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState){
         // NOTE (LESWING) HACK to allow syncronous network IO
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
@@ -49,16 +50,23 @@ public class MainActivity extends ActionBarActivity {
                 return RestClient.getMedications();
             }
 
-            @Override
-            protected void onPostExecute(List<WsMedication> result) {
-                medications = result;
-            }
-        }.execute();
+
+        };
+        medications = new ArrayList<>();
+        try {
+             medications = isLoggedIn.execute().get();
+        }
+        catch (InterruptedException e){
+
+        }
+        catch (ExecutionException e){
+
+        }
         //Now we get back to handling things that will actually be there
         medicationsList = (ListView) findViewById(R.id.medicationList);
         ArrayList<String> names = new ArrayList<String>();
-        for (WsMedication med : medications) {
-            names.add(med.getName());
+        for(int index = 0; index < medications.size(); index++){
+            names.add(medications.get(index).getName());
         }
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, names);
         medicationsList.setAdapter(arrayAdapter);
@@ -85,7 +93,7 @@ public class MainActivity extends ActionBarActivity {
                     times.add(alarm.getTime());
                 }
                 intent.putExtra("Days", days.toString());
-                intent.putExtra("Time", times.toString());
+                intent.putExtra("Times", times.toString());
                 startActivity(intent);
             }
         });

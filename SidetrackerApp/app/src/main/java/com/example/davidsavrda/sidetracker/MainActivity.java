@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -78,22 +79,55 @@ public class MainActivity extends ActionBarActivity {
                 Intent intent = new Intent(context, Medication.class);
                 intent.putExtra("Username", username);
                 intent.putExtra("Password", password);
+                intent.putExtra("Position", position);
                 intent.putExtra("Medication", (medications.get(position)).getName());
-                List<WsSideEffect> sideEffects = medications.get(position).getSideEffects();
-                List<WsAlarm> alarms = medications.get(position).getAlarms();
-                ArrayList<String> sideEffectsDesc = new ArrayList<String>();
-                for(WsSideEffect side : sideEffects){
-                    sideEffectsDesc.add(side.getDescription());
+                intent.putExtra("MedicationID", (medications.get(position)).getId());
+                intent.putExtra("NumberOfMeds", medications.size());
+
+                ArrayList<String> medNames = new ArrayList<String>();
+                ArrayList<Long> medIds = new ArrayList<Long>();
+
+
+
+                for(int index = 0; index < medications.size(); index++){
+                    medNames.add(medications.get(index).getName());
+                    medIds.add(medications.get(index).getId());
+
+                    List<WsSideEffect> sideEffects = medications.get(index).getSideEffects();
+                    List<WsAlarm> alarms = medications.get(index).getAlarms();
+                    ArrayList<String> sideEffectsDesc = new ArrayList<String>();
+                    ArrayList<Long> sideEffectsIDs = new ArrayList<Long>();
+                    for(WsSideEffect side : sideEffects){
+                        sideEffectsDesc.add(side.getDescription());
+                        sideEffectsIDs.add(side.getId());
+                    }
+                    intent.putExtra("SideEffectDesc" + index, sideEffectsDesc.toString());
+                    intent.putExtra("SideEffectID" + index, sideEffectsIDs.toString());
+
+                    ArrayList<String> days = new ArrayList<String>();
+                    ArrayList<String> times = new ArrayList<String>();
+                    ArrayList<Long> alarmId = new ArrayList<Long>();
+                    for(WsAlarm alarm: alarms){
+                        days.add(alarm.getDay());
+                        times.add(alarm.getTime());
+                        alarmId.add(alarm.getId());
+                    }
+                    intent.putExtra("Days" + index, days.toString());
+                    intent.putExtra("Times" + index, times.toString());
+                    intent.putExtra("AlarmID" + index, alarmId.toString());
+
                 }
-                intent.putExtra("SideEffects", sideEffectsDesc.toString());
-                ArrayList<String> days = new ArrayList<String>();
-                ArrayList<String> times = new ArrayList<String>();
-                for(WsAlarm alarm: alarms){
-                    days.add(alarm.getDay());
-                    times.add(alarm.getTime());
-                }
-                intent.putExtra("Days", days.toString());
-                intent.putExtra("Times", times.toString());
+
+                intent.putExtra("MedNames", medNames.toString());
+                intent.putExtra("MedIDs", medIds.toString());
+
+
+
+
+
+
+
+
                 startActivity(intent);
             }
         });

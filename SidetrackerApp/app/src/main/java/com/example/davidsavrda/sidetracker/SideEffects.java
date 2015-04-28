@@ -32,11 +32,20 @@ public class SideEffects extends ActionBarActivity {
     List sideEffects;
     List days;
     List times;
+    int position;
     ListView sideEffectList;
     String username;
     String password;
-    String medicationName;
-
+    String name;
+    Long medID;
+    int numberOfMeds;
+    ArrayList<String> iDs;
+    ArrayList<String> names;
+    ArrayList<ArrayList<String>> sideEffectsDesc;
+    ArrayList<ArrayList<String>> sideEffectID;
+    ArrayList<ArrayList<String>> alarmDays;
+    ArrayList<ArrayList<String>> alarmTime;
+    ArrayList<ArrayList<String>> alarmIDs;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,17 +53,47 @@ public class SideEffects extends ActionBarActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         username = getIntent().getExtras().getString("Username");
+        position = getIntent().getExtras().getInt("Position");
         password = getIntent().getExtras().getString("Password");
-        medicationName = getIntent().getExtras().getString("Medication");
-        sideEffects = Arrays.asList(getIntent().getExtras().getString("SideEffects").split(","));
-        days = Arrays.asList(getIntent().getExtras().getString("Days").split(","));
-        times = Arrays.asList(getIntent().getExtras().getString("Times").split(","));
+        name = getIntent().getExtras().getString("Medication");
+        medID = getIntent().getExtras().getLong("MedicationID");
+        numberOfMeds = getIntent().getExtras().getInt("NumberOfMeds");
+        iDs = new ArrayList<String>();
+        names = new ArrayList<String>();
+        sideEffectsDesc = new ArrayList<ArrayList<String>>();
+        sideEffectID = new ArrayList<ArrayList<String>>();
+        alarmDays = new ArrayList<ArrayList<String>>();
+        alarmTime = new ArrayList<ArrayList<String>>();
+        alarmIDs = new ArrayList<ArrayList<String>>();
+        iDs.addAll(Arrays.asList(getIntent().getExtras().getString("Names").split(",")));
+        names.addAll(Arrays.asList(getIntent().getExtras().getString("IDS").split(",")));
+
+        for(int index = 0; index < numberOfMeds; index++){
+            ArrayList<String> sideEffectDescs =  new ArrayList<String>();
+            sideEffectDescs.addAll(Arrays.asList(getIntent().getExtras().getString("SideEffectDesc" + index).split(",")));
+            sideEffectsDesc.add(sideEffectDescs);
+            ArrayList<String> sideEffectIDs = new ArrayList<String>();
+            sideEffectIDs.addAll(Arrays.asList(getIntent().getExtras().getString("SideEffectID" + index).split(",")));
+            sideEffectID.add(sideEffectIDs);
+            ArrayList<String> days = new ArrayList<String>();
+            days.addAll(Arrays.asList(getIntent().getExtras().getString("Days" + index).split(",")));
+            alarmDays.add(days);
+            ArrayList<String> times = new ArrayList<String>();
+            times.addAll(Arrays.asList(getIntent().getExtras().getString("Times" + index).split(", ")));
+            alarmTime.add(times);
+            ArrayList<String> ids = new ArrayList<String>();
+            ids.addAll(Arrays.asList(getIntent().getExtras().getString("AlarmID" + index).split(",")));
+            alarmIDs.add(ids);
+
+        }
 
         //Stuff to keep
         sideEffectList = (ListView) findViewById(R.id.sideEffects);
         final ArrayList<String> names = new ArrayList<String>();
-        for(int index = 0; index < sideEffects.size(); index++){
-            names.add(sideEffects.get(index).toString());
+        if(sideEffectsDesc.size() > 0) {
+            for (int index = 0; index < sideEffects.size(); index++) {
+                names.add(sideEffectsDesc.get(position).get(index));
+            }
         }
         final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, names);
         sideEffectList.setAdapter(arrayAdapter);
@@ -94,9 +133,21 @@ public class SideEffects extends ActionBarActivity {
     public void addSideEffect(View v){
         Context context = getApplicationContext();
         Intent intent = new Intent(context, AddSideEffect.class);
-        intent.putExtra("Medication", medicationName);
+        intent.putExtra("Medication", name);
         intent.putExtra("Username", username);
         intent.putExtra("Password", password);
+        intent.putExtra("numberOfMeds", numberOfMeds);
+        intent.putExtra("Position", position);
+        intent.putExtra("ID", medID);
+        intent.putExtra("Names", names.toString());
+        intent.putExtra("IDS", iDs.toString());
+        for(int index = 0; index < numberOfMeds; index++){
+            intent.putExtra("SideEffectDesc" + index, sideEffectsDesc.get(index).toString());
+            intent.putExtra("SidEffectID" + index, sideEffectID.get(index).toString());
+            intent.putExtra("AlarmID" + index, alarmIDs.get(index).toString());
+            intent.putExtra("AlarmDays" + index, alarmDays.get(index).toString());
+            intent.putExtra("AlarmTimes" + index, alarmTime.get(index).toString());
+        }
         startActivity(intent);
     }
 

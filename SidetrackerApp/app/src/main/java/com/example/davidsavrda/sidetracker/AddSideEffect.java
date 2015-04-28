@@ -1,5 +1,7 @@
 package com.example.davidsavrda.sidetracker;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -17,23 +19,68 @@ import com.example.davidsavrda.sidetracker.model.WsMedication;
 import com.example.davidsavrda.sidetracker.model.WsSideEffect;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 
 public class AddSideEffect extends ActionBarActivity {
+    int position;
     String medicationName;
-    String Username;
-    String Password;
+    String username;
+    String password;
+    String name;
+    Long medID;
+    int numberOfMeds;
+    ArrayList<String> iDs;
+    ArrayList<String> names;
+    ArrayList<ArrayList<String>> sideEffectsDesc;
+    ArrayList<ArrayList<String>> sideEffectID;
+    ArrayList<ArrayList<String>> alarmDays;
+    ArrayList<ArrayList<String>> alarmTime;
+    ArrayList<ArrayList<String>> alarmIDs;
+    ArrayList<WsAlarm> alarms;
+    ArrayList<WsAlarm> newAlarm;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_side_effect);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        Username = getIntent().getExtras().get("Username").toString();
-        Password = getIntent().getExtras().get("Password").toString();
-        medicationName = getIntent().getExtras().getString("Medication").toString();
+        username = getIntent().getExtras().getString("Username");
+        position = getIntent().getExtras().getInt("Position");
+        password = getIntent().getExtras().getString("Password");
+        name = getIntent().getExtras().getString("Medication");
+        medID = getIntent().getExtras().getLong("MedicationID");
+        numberOfMeds = getIntent().getExtras().getInt("NumberOfMeds");
+        iDs = new ArrayList<String>();
+        names = new ArrayList<String>();
+        sideEffectsDesc = new ArrayList<ArrayList<String>>();
+        sideEffectID = new ArrayList<ArrayList<String>>();
+        alarmDays = new ArrayList<ArrayList<String>>();
+        alarmTime = new ArrayList<ArrayList<String>>();
+        alarmIDs = new ArrayList<ArrayList<String>>();
+        iDs.addAll(Arrays.asList(getIntent().getExtras().getString("Names").split(",")));
+        names.addAll(Arrays.asList(getIntent().getExtras().getString("IDS").split(",")));
+
+        for(int index = 0; index < numberOfMeds; index++){
+            ArrayList<String> sideEffectDescs =  new ArrayList<String>();
+            sideEffectDescs.addAll(Arrays.asList(getIntent().getExtras().getString("SideEffectDesc" + index).split(",")));
+            sideEffectsDesc.add(sideEffectDescs);
+            ArrayList<String> sideEffectIDs = new ArrayList<String>();
+            sideEffectIDs.addAll(Arrays.asList(getIntent().getExtras().getString("SideEffectID" + index).split(",")));
+            sideEffectID.add(sideEffectIDs);
+            ArrayList<String> days = new ArrayList<String>();
+            days.addAll(Arrays.asList(getIntent().getExtras().getString("Days" + index).split(",")));
+            alarmDays.add(days);
+            ArrayList<String> times = new ArrayList<String>();
+            times.addAll(Arrays.asList(getIntent().getExtras().getString("Times" + index).split(", ")));
+            alarmTime.add(times);
+            ArrayList<String> ids = new ArrayList<String>();
+            ids.addAll(Arrays.asList(getIntent().getExtras().getString("AlarmID" + index).split(",")));
+            alarmIDs.add(ids);
+
+        }
 
     }
 
@@ -83,24 +130,48 @@ public class AddSideEffect extends ActionBarActivity {
         WsMedication med = updatedMed.get(0);
 
 
-        intent.putExtra("Username", Username);
-        intent.putExtra("Password", Password);
-        intent.putExtra("Medication", med.getName());
-        List<WsAlarm> alarms = med.getAlarms();
-        List<WsSideEffect> sides = med.getSideEffects();
-        ArrayList<String> days = new ArrayList<String>();
-        ArrayList<String> times = new ArrayList<String>();
-        ArrayList<String> names = new ArrayList<String>();
-        for(int index = 0; index < alarms.size(); index++){
-            days.add(alarms.get(index).getDay());
-            times.add(alarms.get(index).getTime());
+        intent.putExtra("Username", username);
+        intent.putExtra("Password", password);
+        intent.putExtra("Position", position);
+        intent.putExtra("Medication", (updatedMed.get(position)).getName());
+        intent.putExtra("MedicationID", (updatedMed.get(position)).getId());
+        intent.putExtra("NumberOfMeds", updatedMed.size());
+
+        ArrayList<String> medNames = new ArrayList<String>();
+        ArrayList<Long> medIds = new ArrayList<Long>();
+
+
+
+        for(int index = 0; index < updatedMed.size(); index++){
+            medNames.add(updatedMed.get(index).getName());
+            medIds.add(updatedMed.get(index).getId());
+
+            List<WsSideEffect> sideEffects = updatedMed.get(index).getSideEffects();
+            List<WsAlarm> alarms = updatedMed.get(index).getAlarms();
+            ArrayList<String> sideEffectsDesc = new ArrayList<String>();
+            ArrayList<Long> sideEffectsIDs = new ArrayList<Long>();
+            for(WsSideEffect side : sideEffects){
+                sideEffectsDesc.add(side.getDescription());
+                sideEffectsIDs.add(side.getId());
+            }
+            intent.putExtra("SideEffectDesc" + index, sideEffectsDesc.toString());
+            intent.putExtra("SideEffectID" + index, sideEffectsIDs.toString());
+
+            ArrayList<String> days = new ArrayList<String>();
+            ArrayList<String> times = new ArrayList<String>();
+            ArrayList<Long> alarmId = new ArrayList<Long>();
+            for(WsAlarm alarm: alarms){
+                days.add(alarm.getDay());
+                times.add(alarm.getTime());
+                alarmId.add(alarm.getId());
+            }
+            intent.putExtra("Days" + index, days.toString());
+            intent.putExtra("Times" + index, times.toString());
+            intent.putExtra("AlarmID" + index, alarmId.toString());
+
         }
-        for(int index = 0; index < sides.size(); index++){
-            names.add(sides.get(index).getDescription());
-        }
-        intent.putExtra("SideEffects", sides.toString());
-        intent.putExtra("Days", days.toString());
-        intent.putExtra("Times", times.toString());
-        startActivity(intent);
+
+        intent.putExtra("MedNames", medNames.toString());
+        intent.putExtra("MedIDs", medIds.toString());
     }
 }

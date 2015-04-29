@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.RadioButton;
+import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.example.davidsavrda.sidetracker.client.RestClient;
@@ -68,8 +69,9 @@ public class Alarm extends ActionBarActivity {
         alarmDays = new ArrayList<ArrayList<String>>();
         alarmTime = new ArrayList<ArrayList<String>>();
         alarmIDs = new ArrayList<ArrayList<String>>();
-        iDs.addAll(Arrays.asList(getIntent().getExtras().getString("Names").split(",")));
-        names.addAll(Arrays.asList(getIntent().getExtras().getString("IDS").split(",")));
+        alarms = new ArrayList<WsAlarm>();
+        iDs.addAll(Arrays.asList(getIntent().getExtras().getString("IDS").split(",")));
+        names.addAll(Arrays.asList(getIntent().getExtras().getString("Names").split(",")));
 
         for(int index = 0; index < numberOfMeds; index++){
             ArrayList<String> sideEffectDescs =  new ArrayList<String>();
@@ -420,6 +422,8 @@ public class Alarm extends ActionBarActivity {
                     ArrayList<String> days = alarmDays.get(position);
                     ArrayList<String> times = alarmTime.get(position);
                     ArrayList<String> ids = alarmIDs.get(position);
+                    Log.w("day Size", String.valueOf(days.size()));
+                    Log.w("ids Size", ids.toString());
                     for(int alarmIndex = 0; alarmIndex < days.size(); alarmIndex++){
                         WsAlarm newalarm = new WsAlarm();
                         newalarm.setDay(days.get(alarmIndex));
@@ -438,6 +442,12 @@ public class Alarm extends ActionBarActivity {
                         sides.add(newEffect);
 
                     }
+                    if(position == index){
+                        WsAlarm newEffect = new WsAlarm();
+                        for(int aindex = 0; aindex < newAlarm.size(); aindex++ ){
+                            alarms.add(newAlarm.get(aindex));
+                        }
+                    }
                     newMed.setAlarms(alarms);
                     newMed.setSideEffects(sides);
                     medicationCall.add(newMed);
@@ -448,6 +458,7 @@ public class Alarm extends ActionBarActivity {
                 return RestClient.updateMedication(medicationCall);
             }
         };
+        Log.w("About to make the call", "I want to know if we get here");
         List<WsMedication> updatedMed = isLoggedIn.execute().get();
         Log.w("Return from put", String.valueOf(updatedMed.size()));
 

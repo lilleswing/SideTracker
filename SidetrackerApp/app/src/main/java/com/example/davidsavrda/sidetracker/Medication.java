@@ -74,6 +74,7 @@ public class Medication extends ActionBarActivity {
             ArrayList<String> days = new ArrayList<String>();
                     days.addAll(Arrays.asList(getIntent().getExtras().getString("Days" + index).split(",")));
             alarmDays.add(days);
+
             ArrayList<String> times = new ArrayList<String>();
                     times.addAll(Arrays.asList(getIntent().getExtras().getString("Times" + index).split(", ")));
             alarmTime.add(times);
@@ -140,8 +141,8 @@ public class Medication extends ActionBarActivity {
         intent.putExtra("NumberOfMeds", numberOfMeds);
         intent.putExtra("Position", position);
         intent.putExtra("ID", medID);
-        intent.putExtra("Names", names.toString());
-        intent.putExtra("IDS", iDs.toString());
+        intent.putExtra("Names", names.get(0).toString());
+        intent.putExtra("IDS", iDs.get(0).toString());
         for(int index = 0; index < numberOfMeds; index++){
             intent.putExtra("SideEffectDesc" + index, sideEffectsDesc.get(index).toString());
             intent.putExtra("SideEffectID" + index, sideEffectID.get(index).toString());
@@ -156,13 +157,13 @@ public class Medication extends ActionBarActivity {
         Context context = getApplicationContext();
         Intent intent = new Intent(context, Alarm.class);
         intent.putExtra("Medication", name);
-        intent.putExtra("Username", username);
         intent.putExtra("Password", password);
+        intent.putExtra("Username", username);
         intent.putExtra("NumberOfMeds", numberOfMeds);
         intent.putExtra("Position", position);
         intent.putExtra("ID", medID);
-        intent.putExtra("Names", names.toString());
-        intent.putExtra("IDS", iDs.toString());
+        intent.putExtra("Names", names.get(0).toString());
+        intent.putExtra("IDS", iDs.get(0).toString());
         for(int index = 0; index < numberOfMeds; index++){
             intent.putExtra("SideEffectDesc" + index, sideEffectsDesc.get(index).toString());
             intent.putExtra("SideEffectID" + index, sideEffectID.get(index).toString());

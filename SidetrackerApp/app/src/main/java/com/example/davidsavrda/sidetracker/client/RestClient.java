@@ -33,7 +33,7 @@ public class RestClient {
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private static final String AUTHORIZATION_HEADER = "Authorization";
 
-    private static String baseUrl = "http://10.0.2.2:8080/api";
+    private static String baseUrl = "http://10.0.2.2:8080/sidetracker/api";
 
     private static String userName = "martha";
     private static String password = "password";
@@ -41,7 +41,7 @@ public class RestClient {
     }
 
     public static void setUrl(final String url) {
-        baseUrl = baseUrl + "/api";
+        baseUrl = baseUrl + "/sidetracker/api";
     }
 
     public static void setAuth(final String userName, final String password) {
@@ -132,8 +132,12 @@ public class RestClient {
             HttpPut put = new HttpPut(myUrl);
             setHeaders(put);
             final String entity = objectMapper.writeValueAsString(medicationInfos);
+            Log.e("Request JSON", entity);
             put.setEntity(new StringEntity(entity));
-            return executeRequestForList(put, WsMedication.class);
+            final List<WsMedication> response = executeRequestForList(put, WsMedication.class);
+            final String responseEntity = objectMapper.writeValueAsString(response);
+            Log.e("Response JSON", responseEntity);
+            return response;
         } catch (final JsonProcessingException e) {
             e.printStackTrace();
         } catch (UnsupportedEncodingException e) {
@@ -154,6 +158,7 @@ public class RestClient {
     private static <T> List<T> executeRequestForList(final HttpUriRequest request, final Class<T> clazz) {
         try {
             final HttpResponse response = client.execute(request);
+            Log.w("respose Coe", String.valueOf(response.getStatusLine().getStatusCode()));
             return objectMapper.readValue(response.getEntity().getContent(),
                     objectMapper.getTypeFactory().constructCollectionType(List.class, clazz));
         } catch (IOException e) {

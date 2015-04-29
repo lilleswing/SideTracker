@@ -78,6 +78,9 @@ public class Login extends ActionBarActivity {
         login = isLoggedIn.execute().get();
         Intent intent = new Intent(context, MainActivity.class);
         Log.w("Sidetracker", login.toString());
+        if(!((TextView) findViewById(R.id.URL)).getText().toString().isEmpty()){
+            RestClient.setUrl(((TextView) findViewById(R.id.URL)).getText().toString());
+        }
         if(login) {
             intent.putExtra("Username", ((TextView) findViewById(R.id.username)).getText().toString());
             intent.putExtra("Password", ((TextView) findViewById(R.id.Password)).getText().toString());
@@ -91,6 +94,9 @@ public class Login extends ActionBarActivity {
 
     public void signUpPressed(View v){
         Context context = getApplicationContext();
+        if(!((TextView) findViewById(R.id.URL)).getText().toString().isEmpty()){
+            RestClient.setUrl(((TextView) findViewById(R.id.URL)).getText().toString());
+        }
         Intent intent = new Intent(context, SignUp.class);
         startActivity(intent);
     }

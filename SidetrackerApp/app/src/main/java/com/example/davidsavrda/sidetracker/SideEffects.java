@@ -26,35 +26,44 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 
 public class SideEffects extends ActionBarActivity {
     List sideEffects;
     List days;
     List times;
+    int position;
     ListView sideEffectList;
-    String username;
-    String password;
-    String medicationName;
-
+    List<WsMedication> medications;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_side__effects);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        username = getIntent().getExtras().getString("Username");
-        password = getIntent().getExtras().getString("Password");
-        medicationName = getIntent().getExtras().getString("Medication");
-        sideEffects = Arrays.asList(getIntent().getExtras().getString("SideEffects").split(","));
-        days = Arrays.asList(getIntent().getExtras().getString("Days").split(","));
-        times = Arrays.asList(getIntent().getExtras().getString("Times").split(","));
+        AsyncTask<Object, Void, List<WsMedication>> isLoggedIn = new AsyncTask<Object, Void, List<WsMedication>>() {
+            @Override
+            protected List<WsMedication> doInBackground(Object... params) {
+                return RestClient.getMedications();
+            }
+
+
+        };
+        medications = new ArrayList<>();
+        try {
+            medications = isLoggedIn.execute().get();
+        } catch (InterruptedException e) {
+
+        } catch (ExecutionException e) {
+
+        }
 
         //Stuff to keep
         sideEffectList = (ListView) findViewById(R.id.sideEffects);
         final ArrayList<String> names = new ArrayList<String>();
-        for(int index = 0; index < sideEffects.size(); index++){
-            names.add(sideEffects.get(index).toString());
+        for(int index = 0; index < medications.get(position).getSideEffects().size(); index++){
+            names.add(medications.get(position).getSideEffects().get(index).getDescription());
         }
         final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, names);
         sideEffectList.setAdapter(arrayAdapter);
@@ -94,9 +103,9 @@ public class SideEffects extends ActionBarActivity {
     public void addSideEffect(View v){
         Context context = getApplicationContext();
         Intent intent = new Intent(context, AddSideEffect.class);
-        intent.putExtra("Medication", medicationName);
-        intent.putExtra("Username", username);
-        intent.putExtra("Password", password);
+
+        intent.putExtra("Position", position);
+
         startActivity(intent);
     }
 

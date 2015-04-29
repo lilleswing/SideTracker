@@ -8,12 +8,14 @@ import android.os.AsyncTask;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.RadioButton;
+import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.example.davidsavrda.sidetracker.client.RestClient;
@@ -26,40 +28,45 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 
 public class Alarm extends ActionBarActivity {
-    List sideEffects;
-    List days;
-    List times;
-    String password;
+
     TimePicker time;
-    String username;
+    int position;
     String medicationName;
     AlarmManager alarmManager;
     PendingIntent alarmIntent;
-    ArrayList<WsAlarm> alarms;
-    ArrayList<WsAlarm> newAlarm;
+    List<WsMedication> medications;
+    List<WsAlarm> newAlarm;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm);
-        alarms = new ArrayList<WsAlarm>();
-        username = getIntent().getExtras().getString("Username");
-        password = getIntent().getExtras().getString("Password");
-        medicationName = getIntent().getExtras().getString("Medication");
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        medicationName = getIntent().getExtras().getString("Medication");
-        sideEffects = Arrays.asList(getIntent().getExtras().getString("SideEffects").split(","));
-        days = Arrays.asList(getIntent().getExtras().getString("Days").split(","));
-        times = Arrays.asList(getIntent().getExtras().getString("Times").split(","));
-        for(int index = 0; index < days.size(); index++){
-            WsAlarm alarmObject = new WsAlarm();
-            alarmObject.setDay(days.get(index).toString());
-            alarmObject.setTime(times.get(index).toString());
-            alarms.add(alarmObject);
+
+        position = getIntent().getExtras().getInt("Position");
+        AsyncTask<Object, Void, List<WsMedication>> isLoggedIn = new AsyncTask<Object, Void, List<WsMedication>>() {
+            @Override
+            protected List<WsMedication> doInBackground(Object... params) {
+                return RestClient.getMedications();
+            }
+
+
+        };
+        medications = new ArrayList<>();
+        try {
+            medications = isLoggedIn.execute().get();
+        } catch (InterruptedException e) {
+
+        } catch (ExecutionException e) {
+
         }
+
+
+
+
+
         time = (TimePicker) findViewById(R.id.timePicker);
         time.setIs24HourView(true);
         alarmManager = (AlarmManager) getBaseContext().getSystemService(Context.ALARM_SERVICE);
@@ -88,18 +95,19 @@ public class Alarm extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void addAlarm(View v){
+    public void addAlarm(View v) throws InterruptedException, ExecutionException{
         Context context = getApplicationContext();
+        newAlarm = new ArrayList<WsAlarm>();
         int hour = time.getCurrentHour();
         int minute = time.getCurrentMinute();
-        String alarmTime = hour + ":" + minute;
+        final String newAlarmTime = hour + ":" + minute;
         if(((RadioButton) findViewById(R.id.Daily)).isChecked()){
             Intent intent = new Intent(context, AlarmAlert.class);
             intent.putExtra("Medication", medicationName);
             alarmIntent = PendingIntent.getBroadcast(getBaseContext(), 0, intent, 0);
             WsAlarm mAlarm = new WsAlarm();
             mAlarm.setDay("Monday");
-            mAlarm.setTime(alarmTime);
+            mAlarm.setTime(newAlarmTime);
             newAlarm.add(mAlarm);
 
             Calendar calendar = Calendar.getInstance();
@@ -118,7 +126,7 @@ public class Alarm extends ActionBarActivity {
             alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmManager.INTERVAL_DAY * 7, alarmIntent);
             WsAlarm tuesAlarm = new WsAlarm();
             mAlarm.setDay("Tuesday");
-            mAlarm.setTime(alarmTime);
+            mAlarm.setTime(newAlarmTime);
             newAlarm.add(tuesAlarm);
             calendar = Calendar.getInstance();
             calendar.set(Calendar.DAY_OF_WEEK, 2);
@@ -136,7 +144,7 @@ public class Alarm extends ActionBarActivity {
             alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmManager.INTERVAL_DAY * 7, alarmIntent);
             WsAlarm wAlarm = new WsAlarm();
             mAlarm.setDay("Wednesday");
-            mAlarm.setTime(alarmTime);
+            mAlarm.setTime(newAlarmTime);
             calendar = Calendar.getInstance();
             calendar.set(Calendar.DAY_OF_WEEK, 3);
 
@@ -154,7 +162,7 @@ public class Alarm extends ActionBarActivity {
             newAlarm.add(wAlarm);
             WsAlarm thAlarm = new WsAlarm();
             mAlarm.setDay("Thursday");
-            mAlarm.setTime(alarmTime);
+            mAlarm.setTime(newAlarmTime);
             calendar = Calendar.getInstance();
             calendar.set(Calendar.DAY_OF_WEEK, 4);
 
@@ -172,7 +180,7 @@ public class Alarm extends ActionBarActivity {
             newAlarm.add(thAlarm);
             WsAlarm fAlarm = new WsAlarm();
             mAlarm.setDay("Friday");
-            mAlarm.setTime(alarmTime);
+            mAlarm.setTime(newAlarmTime);
             calendar = Calendar.getInstance();
             calendar.set(Calendar.DAY_OF_WEEK, 5);
 
@@ -190,7 +198,7 @@ public class Alarm extends ActionBarActivity {
             newAlarm.add(fAlarm);
             WsAlarm saAlarm = new WsAlarm();
             mAlarm.setDay("Saturday");
-            mAlarm.setTime(alarmTime);
+            mAlarm.setTime(newAlarmTime);
             calendar = Calendar.getInstance();
             calendar.set(Calendar.DAY_OF_WEEK, 6);
 
@@ -208,7 +216,7 @@ public class Alarm extends ActionBarActivity {
             newAlarm.add(saAlarm);
             WsAlarm suAlarm = new WsAlarm();
             mAlarm.setDay("Sunday");
-            mAlarm.setTime(alarmTime);
+            mAlarm.setTime(newAlarmTime);
             calendar = Calendar.getInstance();
             calendar.set(Calendar.DAY_OF_WEEK, 7);
 
@@ -230,7 +238,7 @@ public class Alarm extends ActionBarActivity {
             if(((CheckBox) findViewById(R.id.Monday)).isChecked()){
                 WsAlarm mAlarm = new WsAlarm();
                 mAlarm.setDay("Monday");
-                mAlarm.setTime(alarmTime);
+                mAlarm.setTime(newAlarmTime);
                 calendar = Calendar.getInstance();
                 calendar.set(Calendar.DAY_OF_WEEK, 1);
 
@@ -250,7 +258,7 @@ public class Alarm extends ActionBarActivity {
             if(((CheckBox) findViewById(R.id.Tuesday)).isChecked()){
                 WsAlarm tuesAlarm = new WsAlarm();
                 tuesAlarm.setDay("Tuesday");
-                tuesAlarm.setTime(alarmTime);
+                tuesAlarm.setTime(newAlarmTime);
                 calendar = Calendar.getInstance();
                 calendar.set(Calendar.DAY_OF_WEEK, 2);
 
@@ -270,7 +278,7 @@ public class Alarm extends ActionBarActivity {
             if(((CheckBox) findViewById(R.id.Wednesday)).isChecked()){
                 WsAlarm wAlarm = new WsAlarm();
                 wAlarm.setDay("Wednesday");
-                wAlarm.setTime(alarmTime);
+                wAlarm.setTime(newAlarmTime);
                 calendar = Calendar.getInstance();
                 calendar.set(Calendar.DAY_OF_WEEK, 3);
 
@@ -290,7 +298,7 @@ public class Alarm extends ActionBarActivity {
             if(((CheckBox) findViewById(R.id.Thursday)).isChecked()){
                 WsAlarm thAlarm = new WsAlarm();
                 thAlarm.setDay("Thursday");
-                thAlarm.setTime(alarmTime);
+                thAlarm.setTime(newAlarmTime);
                 calendar = Calendar.getInstance();
                 calendar.set(Calendar.DAY_OF_WEEK, 4);
 
@@ -310,7 +318,7 @@ public class Alarm extends ActionBarActivity {
             if(((CheckBox) findViewById(R.id.Friday)).isChecked()){
                 WsAlarm fAlarm = new WsAlarm();
                 fAlarm.setDay("Friday");
-                fAlarm.setTime(alarmTime);
+                fAlarm.setTime(newAlarmTime);
                 calendar = Calendar.getInstance();
                 calendar.set(Calendar.DAY_OF_WEEK, 5);
 
@@ -330,7 +338,7 @@ public class Alarm extends ActionBarActivity {
             if(((CheckBox) findViewById(R.id.Saturday)).isChecked()){
                 WsAlarm saAlarm = new WsAlarm();
                 saAlarm.setDay("Saturday");
-                saAlarm.setTime(alarmTime);
+                saAlarm.setTime(newAlarmTime);
                 calendar = Calendar.getInstance();
                 calendar.set(Calendar.DAY_OF_WEEK, 6);
 
@@ -350,7 +358,7 @@ public class Alarm extends ActionBarActivity {
             if(((CheckBox) findViewById(R.id.Sunday)).isChecked()){
                 WsAlarm suAlarm = new WsAlarm();
                 suAlarm.setDay("Sunday");
-                suAlarm.setTime(alarmTime);
+                suAlarm.setTime(newAlarmTime);
                 calendar = Calendar.getInstance();
                 calendar.set(Calendar.DAY_OF_WEEK, 7);
 
@@ -372,20 +380,36 @@ public class Alarm extends ActionBarActivity {
         AsyncTask<Object, Void, List<WsMedication>> isLoggedIn = new AsyncTask<Object, Void, List<WsMedication>>() {
             @Override
             protected List<WsMedication> doInBackground(Object... params) {
-                WsMedication newMed = new WsMedication();
-                newMed.setName(medicationName);
-                newMed.setAlarms(newAlarm);
-                List<WsMedication> medForCall = new ArrayList<WsMedication>();
-                medForCall.add(newMed);
-                return RestClient.updateMedication(medForCall);
-            }
 
-            @Override
-            protected void onPostExecute(List<WsMedication> result) {
+                WsMedication updatedMed = medications.get(position);
+                List<WsAlarm> alarms = new ArrayList<WsAlarm>();
+                alarms = updatedMed.getAlarms();
+                for(int index = 0; index < newAlarm.size(); index++){
+                    alarms.add(newAlarm.get(index));
+                }
+                updatedMed.setAlarms(alarms);
+                medications.set(position, updatedMed);
+                return RestClient.updateMedication(medications);
+
+
+
 
             }
-        }.execute();
+        };
+        Log.w("About to make the call", "I want to know if we get here");
+        List<WsMedication> updatedMed = isLoggedIn.execute().get();
+        Log.w("Return from put", String.valueOf(updatedMed.size()));
+
+        WsMedication med = updatedMed.get(0);
+
         Intent intent = new Intent(context, Medication.class);
+
+
+        intent.putExtra("Position", position);
+
+
+
+
         startActivity(intent);
     }
 }

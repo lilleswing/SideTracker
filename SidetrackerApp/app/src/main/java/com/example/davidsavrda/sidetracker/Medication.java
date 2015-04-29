@@ -2,6 +2,7 @@ package com.example.davidsavrda.sidetracker;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -13,6 +14,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.davidsavrda.sidetracker.client.RestClient;
+import com.example.davidsavrda.sidetracker.model.WsMedication;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,6 +24,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 
 public class Medication extends ActionBarActivity {
@@ -28,33 +33,47 @@ public class Medication extends ActionBarActivity {
     public ListView alarms;
     public TextView title;
     public TextView details;
-    String username;
-    String password;
-    String name;
-    List<String> sideEffects;
-    List<String> alarmDays;
-    List<String> alarmTime;
+    int position;
+    Long medID;
+    List<WsMedication> medications;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_medication);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        username = getIntent().getExtras().getString("Username");
-        password = getIntent().getExtras().getString("Password");
-        name = getIntent().getExtras().getString("Medication");
-        sideEffects = Arrays.asList(getIntent().getExtras().getString("SideEffects").split(","));
-        alarmDays = Arrays.asList(getIntent().getExtras().getString("Days").split(","));
-        alarmTime = Arrays.asList(getIntent().getExtras().getString("Times").split(","));
+
+        position = getIntent().getExtras().getInt("Position");
+        AsyncTask<Object, Void, List<WsMedication>> isLoggedIn = new AsyncTask<Object, Void, List<WsMedication>>() {
+            @Override
+            protected List<WsMedication> doInBackground(Object... params) {
+                return RestClient.getMedications();
+            }
+
+
+        };
+        medications = new ArrayList<>();
+        try {
+            medications = isLoggedIn.execute().get();
+        } catch (InterruptedException e) {
+
+        } catch (ExecutionException e) {
+
+        }
+
+
+
+
+
 
         title = (TextView) findViewById(R.id.Title);
-        title.setText(name);
+        title.setText(medications.get(position).getName());
         details = (TextView) findViewById(R.id.textView6);
         details.setText("");
         alarms = (ListView) findViewById(R.id.AlarmListView);
         ArrayList<String> alarmInfos = new ArrayList<String>();
-        for(int index = 0; index < alarmDays.size(); index++){
-            alarmInfos.add("Day: " + alarmDays.get(index) + " Time: " + alarmTime.get(index));
+        for(int index = 0; index < medications.get(position).getAlarms().size(); index++){
+            alarmInfos.add("Day: " + medications.get(position).getAlarms().get(index).getDay() + " Time: " + medications.get(position).getAlarms().get(index).getTime());
         }
 
         final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, alarmInfos);
@@ -95,12 +114,8 @@ public class Medication extends ActionBarActivity {
     public void viewSideEffect(View v){
         Context context = getApplicationContext();
         Intent intent = new Intent(context, SideEffects.class);
-        intent.putExtra("Medication", name);
-        intent.putExtra("Password", password);
-        intent.putExtra("Username", username);
-        intent.putExtra("SideEffects", sideEffects.toString());
-        intent.putExtra("Times", alarmTime.toString());
-        intent.putExtra("Days", alarmDays.toString());
+
+        intent.putExtra("Position", position);
 
         startActivity(intent);
     }
@@ -108,12 +123,9 @@ public class Medication extends ActionBarActivity {
     public void addAlarm(View v){
         Context context = getApplicationContext();
         Intent intent = new Intent(context, Alarm.class);
-        intent.putExtra("Medication", name);
-        intent.putExtra("Username", username);
-        intent.putExtra("Password", password);
-        intent.putExtra("Days", alarmDays.toString());
-        intent.putExtra("Times", alarmTime.toString());
-        intent.putExtra("SideEffects", sideEffects.toString());
+
+        intent.putExtra("Position", position);
+
         startActivity(intent);
     }
 

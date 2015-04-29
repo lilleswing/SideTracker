@@ -132,8 +132,12 @@ public class RestClient {
             HttpPut put = new HttpPut(myUrl);
             setHeaders(put);
             final String entity = objectMapper.writeValueAsString(medicationInfos);
+            Log.e("Request JSON", entity);
             put.setEntity(new StringEntity(entity));
-            return executeRequestForList(put, WsMedication.class);
+            final List<WsMedication> response = executeRequestForList(put, WsMedication.class);
+            final String responseEntity = objectMapper.writeValueAsString(response);
+            Log.e("Response JSON", responseEntity);
+            return response;
         } catch (final JsonProcessingException e) {
             e.printStackTrace();
         } catch (UnsupportedEncodingException e) {

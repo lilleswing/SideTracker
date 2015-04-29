@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -61,8 +62,8 @@ public class AddSideEffect extends ActionBarActivity {
         alarmDays = new ArrayList<ArrayList<String>>();
         alarmTime = new ArrayList<ArrayList<String>>();
         alarmIDs = new ArrayList<ArrayList<String>>();
-        iDs.addAll(Arrays.asList(getIntent().getExtras().getString("Names").split(",")));
-        names.addAll(Arrays.asList(getIntent().getExtras().getString("IDS").split(",")));
+        iDs.addAll(Arrays.asList(getIntent().getExtras().getString("IDS").split(",")));
+        names.addAll(Arrays.asList(getIntent().getExtras().getString("Names").split(",")));
 
         for(int index = 0; index < numberOfMeds; index++){
             ArrayList<String> sideEffectDescs =  new ArrayList<String>();
@@ -113,12 +114,12 @@ public class AddSideEffect extends ActionBarActivity {
         AsyncTask<Object, Void, List<WsMedication>> isLoggedIn = new AsyncTask<Object, Void, List<WsMedication>>() {
             @Override
             protected List<WsMedication> doInBackground(Object... params) {
-
+                Log.w("NumberofMeds", String.valueOf(numberOfMeds));
                 List<WsMedication> medicationCall = new ArrayList<WsMedication>();
                 for(int index = 0; index < numberOfMeds; index++){
                     WsMedication newMed = new WsMedication();
-                    newMed.setName(name);
-                    newMed.setId(medID);
+                    newMed.setName(names.get(index));
+                    newMed.setId(Long.getLong(iDs.get(index)));
                     List<WsAlarm> alarms = new ArrayList<WsAlarm>();
                     ArrayList<String> days = alarmDays.get(position);
                     ArrayList<String> times = alarmTime.get(position);
@@ -148,7 +149,9 @@ public class AddSideEffect extends ActionBarActivity {
                     }
                     newMed.setAlarms(alarms);
                     newMed.setSideEffects(sides);
+
                     medicationCall.add(newMed);
+                    Log.w("Number", String.valueOf(medicationCall.size()));
                 }
 
 
@@ -167,7 +170,7 @@ public class AddSideEffect extends ActionBarActivity {
         intent.putExtra("Password", password);
         intent.putExtra("Position", position);
         intent.putExtra("Medication", (updatedMed.get(position)).getName());
-        intent.putExtra("MedicationID", (updatedMed.get(position)).getId());
+        intent.putExtra("ID", (updatedMed.get(position)).getId());
         intent.putExtra("NumberOfMeds", updatedMed.size());
 
         ArrayList<String> medNames = new ArrayList<String>();
@@ -204,7 +207,7 @@ public class AddSideEffect extends ActionBarActivity {
 
         }
 
-        intent.putExtra("MedNames", medNames.toString());
-        intent.putExtra("MedIDs", medIds.toString());
+        intent.putExtra("Names", medNames.toString());
+        intent.putExtra("IDS", medIds.toString());
     }
 }

@@ -41,7 +41,7 @@ public class RestClient {
     }
 
     public static void setUrl(final String url) {
-        baseUrl = baseUrl + "/api";
+        baseUrl = baseUrl + "/sidetracker/api";
     }
 
     public static void setAuth(final String userName, final String password) {
@@ -158,6 +158,7 @@ public class RestClient {
     private static <T> List<T> executeRequestForList(final HttpUriRequest request, final Class<T> clazz) {
         try {
             final HttpResponse response = client.execute(request);
+            Log.w("respose Coe", String.valueOf(response.getStatusLine().getStatusCode()));
             return objectMapper.readValue(response.getEntity().getContent(),
                     objectMapper.getTypeFactory().constructCollectionType(List.class, clazz));
         } catch (IOException e) {

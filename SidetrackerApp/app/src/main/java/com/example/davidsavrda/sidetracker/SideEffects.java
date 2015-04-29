@@ -91,7 +91,7 @@ public class SideEffects extends ActionBarActivity {
         sideEffectList = (ListView) findViewById(R.id.sideEffects);
         final ArrayList<String> names = new ArrayList<String>();
         if(sideEffectsDesc.size() > 0) {
-            for (int index = 0; index < sideEffects.size(); index++) {
+            for (int index = 0; index < sideEffectsDesc.get(position).size(); index++) {
                 names.add(sideEffectsDesc.get(position).get(index));
             }
         }
@@ -136,17 +136,17 @@ public class SideEffects extends ActionBarActivity {
         intent.putExtra("Medication", name);
         intent.putExtra("Username", username);
         intent.putExtra("Password", password);
-        intent.putExtra("numberOfMeds", numberOfMeds);
+        intent.putExtra("NumberOfMeds", numberOfMeds);
         intent.putExtra("Position", position);
         intent.putExtra("ID", medID);
         intent.putExtra("Names", names.toString());
         intent.putExtra("IDS", iDs.toString());
         for(int index = 0; index < numberOfMeds; index++){
             intent.putExtra("SideEffectDesc" + index, sideEffectsDesc.get(index).toString());
-            intent.putExtra("SidEffectID" + index, sideEffectID.get(index).toString());
+            intent.putExtra("SideEffectID" + index, sideEffectID.get(index).toString());
             intent.putExtra("AlarmID" + index, alarmIDs.get(index).toString());
-            intent.putExtra("AlarmDays" + index, alarmDays.get(index).toString());
-            intent.putExtra("AlarmTimes" + index, alarmTime.get(index).toString());
+            intent.putExtra("Days" + index, alarmDays.get(index).toString());
+            intent.putExtra("Times" + index, alarmTime.get(index).toString());
         }
         startActivity(intent);
     }
